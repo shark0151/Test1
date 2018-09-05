@@ -1,0 +1,95 @@
+﻿<Page
+    x:Class="Test1.Game"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Test1"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Name="All" Width="680" Height="680" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBlock Text="A" Margin="52,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="B" Margin="132,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="C" Margin="212,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="D" Margin="292,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="E" Margin="372,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="F" Margin="452,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="G" Margin="532,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="H" Margin="612,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <TextBlock Text="A" Margin="52,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <TextBlock Text="B" Margin="132,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <TextBlock Text="C" Margin="212,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <TextBlock Text="D" Margin="292,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <TextBlock Text="E" Margin="372,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <TextBlock Text="F" Margin="452,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <TextBlock Text="G" Margin="532,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <TextBlock Text="H" Margin="612,0,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+
+        <TextBlock Text="8" Margin="0,52,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="7" Margin="0,132,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="6" Margin="0,212,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="5" Margin="0,292,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="4" Margin="0,372,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="3" Margin="0,452,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="2" Margin="0,532,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Text="1" Margin="0,612,0,0" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <TextBlock Text="8" Margin="0,52,0,0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right"/>
+        <TextBlock Text="7" Margin="0,132,0,0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right"/>
+        <TextBlock Text="6" Margin="0,212,0,0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right"/>
+        <TextBlock Text="5" Margin="0,292,0,0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right"/>
+        <TextBlock Text="4" Margin="0,372,0,0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right"/>
+        <TextBlock Text="3" Margin="0,452,0,0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right"/>
+        <TextBlock Text="2" Margin="0,532,0,0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right"/>
+        <TextBlock Text="1" Margin="0,612,0,0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" TextAlignment="Right"/>
+
+
+
+        <Grid Name="Chessboard" HorizontalAlignment="Center" Height="640" Width="640" Margin="0,0,0,0" VerticalAlignment="Center">
+        
+        <Rectangle HorizontalAlignment="Left" Height="640" Margin="0,0,0,0" VerticalAlignment="Top" Width="640" Fill="Black"/>
+        
+        <Rectangle Name="A8" HorizontalAlignment="Left" Height="80" Margin="0,0,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="0,160,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="0,320,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="0,480,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="160,0,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="160,160,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="160,320,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="160,480,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="320,0,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="320,160,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="320,320,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="320,480,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="480,0,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="480,160,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="480,320,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="480,480,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="80,80,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="80,240,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="80,400,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="80,560,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="240,80,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="240,240,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="240,400,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="240,560,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="400,80,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="400,240,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="400,400,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="400,560,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="560,80,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="560,240,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="560,400,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="560,560,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+    </Grid>
+    </Grid>
+</Page>
