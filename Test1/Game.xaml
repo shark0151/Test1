@@ -49,47 +49,86 @@
 
         <Grid Name="Chessboard" HorizontalAlignment="Center" Height="640" Width="640" Margin="0,0,0,0" VerticalAlignment="Center">
         
-        <Rectangle HorizontalAlignment="Left" Height="640" Margin="0,0,0,0" VerticalAlignment="Top" Width="640" Fill="Black"/>
-        
-        <Rectangle Name="A8" HorizontalAlignment="Left" Height="80" Margin="0,0,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="0,160,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="0,320,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="0,480,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="A8" HorizontalAlignment="Left" Height="80" Margin="0,0,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="A6" HorizontalAlignment="Left" Height="80" Margin="0,160,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="A4" HorizontalAlignment="Left" Height="80" Margin="0,320,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="A2" HorizontalAlignment="Left" Height="80" Margin="0,480,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
 
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="160,0,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="160,160,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="160,320,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="160,480,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="A7" HorizontalAlignment="Left" Height="80" Margin="0,80,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="A5" HorizontalAlignment="Left" Height="80" Margin="0,240,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="A3" HorizontalAlignment="Left" Height="80" Margin="0,400,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="A1" HorizontalAlignment="Left" Height="80" Margin="0,560,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
 
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="320,0,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="320,160,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="320,320,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="320,480,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="B7" HorizontalAlignment="Left" Height="80" Margin="80,80,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="B5" HorizontalAlignment="Left" Height="80" Margin="80,240,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="B3" HorizontalAlignment="Left" Height="80" Margin="80,400,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="B1" HorizontalAlignment="Left" Height="80" Margin="80,560,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
 
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="480,0,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="480,160,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="480,320,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="480,480,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="B8" HorizontalAlignment="Left" Height="80" Margin="80,0,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="B6" HorizontalAlignment="Left" Height="80" Margin="80,160,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="B4" HorizontalAlignment="Left" Height="80" Margin="80,320,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="B2" HorizontalAlignment="Left" Height="80" Margin="80,480,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
 
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="80,80,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="80,240,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="80,400,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="80,560,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="C8" HorizontalAlignment="Left" Height="80" Margin="160,0,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="C6" HorizontalAlignment="Left" Height="80" Margin="160,160,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="C4" HorizontalAlignment="Left" Height="80" Margin="160,320,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="C2" HorizontalAlignment="Left" Height="80" Margin="160,480,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
 
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="240,80,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="240,240,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="240,400,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="240,560,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="C7" HorizontalAlignment="Left" Height="80" Margin="160,80,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="C5" HorizontalAlignment="Left" Height="80" Margin="160,240,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="C3" HorizontalAlignment="Left" Height="80" Margin="160,400,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="C1" HorizontalAlignment="Left" Height="80" Margin="160,560,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
 
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="400,80,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="400,240,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="400,400,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="400,560,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="D7" HorizontalAlignment="Left" Height="80" Margin="240,80,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="D5" HorizontalAlignment="Left" Height="80" Margin="240,240,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="D3" HorizontalAlignment="Left" Height="80" Margin="240,400,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="D1" HorizontalAlignment="Left" Height="80" Margin="240,560,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
 
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="560,80,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="560,240,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="560,400,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="560,560,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
-    </Grid>
+            <Rectangle Name="D8" HorizontalAlignment="Left" Height="80" Margin="240,0,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="D6" HorizontalAlignment="Left" Height="80" Margin="240,160,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="D4" HorizontalAlignment="Left" Height="80" Margin="240,320,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="D2" HorizontalAlignment="Left" Height="80" Margin="240,480,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+
+            <Rectangle Name="E8" HorizontalAlignment="Left" Height="80" Margin="320,0,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="E6" HorizontalAlignment="Left" Height="80" Margin="320,160,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="E4" HorizontalAlignment="Left" Height="80" Margin="320,320,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="E2" HorizontalAlignment="Left" Height="80" Margin="320,480,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+
+            <Rectangle Name="E7" HorizontalAlignment="Left" Height="80" Margin="320,80,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="E5" HorizontalAlignment="Left" Height="80" Margin="320,240,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="E3" HorizontalAlignment="Left" Height="80" Margin="320,400,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="E1" HorizontalAlignment="Left" Height="80" Margin="320,560,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+
+            <Rectangle Name="F7" HorizontalAlignment="Left" Height="80" Margin="400,80,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="F5" HorizontalAlignment="Left" Height="80" Margin="400,240,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="F3" HorizontalAlignment="Left" Height="80" Margin="400,400,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="F1" HorizontalAlignment="Left" Height="80" Margin="400,560,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+
+            <Rectangle Name="F8" HorizontalAlignment="Left" Height="80" Margin="400,0,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="F6" HorizontalAlignment="Left" Height="80" Margin="400,160,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="F4" HorizontalAlignment="Left" Height="80" Margin="400,320,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="F2" HorizontalAlignment="Left" Height="80" Margin="400,480,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+
+            <Rectangle Name="G8" HorizontalAlignment="Left" Height="80" Margin="480,0,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="G6" HorizontalAlignment="Left" Height="80" Margin="480,160,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="G4" HorizontalAlignment="Left" Height="80" Margin="480,320,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="G2" HorizontalAlignment="Left" Height="80" Margin="480,480,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+
+            <Rectangle Name="G7" HorizontalAlignment="Left" Height="80" Margin="480,80,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="G5" HorizontalAlignment="Left" Height="80" Margin="480,240,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="G3" HorizontalAlignment="Left" Height="80" Margin="480,400,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="G1" HorizontalAlignment="Left" Height="80" Margin="480,560,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+
+            <Rectangle Name="H7" HorizontalAlignment="Left" Height="80" Margin="560,80,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="H5" HorizontalAlignment="Left" Height="80" Margin="560,240,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="H3" HorizontalAlignment="Left" Height="80" Margin="560,400,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="H1" HorizontalAlignment="Left" Height="80" Margin="560,560,0,0" VerticalAlignment="Top" Width="80" Fill="White" Stroke="Black" StrokeThickness="2"/>
+
+            <Rectangle Name="H8" HorizontalAlignment="Left" Height="80" Margin="560,0,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="H6" HorizontalAlignment="Left" Height="80" Margin="560,160,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="H4" HorizontalAlignment="Left" Height="80" Margin="560,320,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+            <Rectangle Name="H2" HorizontalAlignment="Left" Height="80" Margin="560,480,0,0" VerticalAlignment="Top" Width="80" Fill="Black" Stroke="Black" StrokeThickness="2"/>
+
+        </Grid>
     </Grid>
 </Page>

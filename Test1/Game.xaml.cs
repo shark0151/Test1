@@ -26,7 +26,13 @@ namespace Test1
         public Game()
         {
             this.InitializeComponent();
+
+            void SetTable()
+            {
+
+            };
             
         }
+        
     }
 }
