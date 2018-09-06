@@ -111,6 +111,18 @@
     <None Include="Test1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Pieces\b_bishop.png" />
+    <Content Include="Assets\Pieces\b_king.png" />
+    <Content Include="Assets\Pieces\b_knight.png" />
+    <Content Include="Assets\Pieces\b_pawn.png" />
+    <Content Include="Assets\Pieces\b_queen.png" />
+    <Content Include="Assets\Pieces\b_rook.png" />
+    <Content Include="Assets\Pieces\w_bishop.png" />
+    <Content Include="Assets\Pieces\w_king.png" />
+    <Content Include="Assets\Pieces\w_knight.png" />
+    <Content Include="Assets\Pieces\w_pawn.png" />
+    <Content Include="Assets\Pieces\w_queen.png" />
+    <Content Include="Assets\Pieces\w_rook.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

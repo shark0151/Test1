@@ -29,9 +29,14 @@ namespace Test1
 
             void SetTable()
             {
-
+                
             };
             
+        }
+
+        public class ChessPieceUnit
+        {
+
         }
         
     }
