@@ -10,28 +10,38 @@ namespace Test1
     {
         public ChessPiece()
         {
-
+            
         }
+
+        private bool TeamColour;
+        private string PieceType;
 
         public bool GetPieceTeam()
         {
+            //false = black, true = white
             if (TeamColour == true)
                 return true;
             else return false;
         }
         public string GetPieceType()
         {
-            return "nada";
+            return PieceType;
+        }
+        public void SetPieceType(string type)
+        {
+            PieceType = type;
         }
 
-        private bool TeamColour;
-        private string PieceType;
+        public void SetPieceTeam(bool team)
+        {
+            TeamColour = team;
+        }
 
         private class MovePiece
         {
 
         }
 
-        private List<string> PieceTypes = new List<string>(new string[] { "Pawn", "Knight", "Bishop" , "Rook" , "Queen" , "King" });
+        
     }
 }
