@@ -24,7 +24,8 @@ namespace Test1
     /// </summary>
     public sealed partial class Game : Page
     {
-        private List<string> PieceTypes = new List<string>(new string[] { "Pawn", "Knight", "Bishop", "Rook", "Queen", "King" });
+        private List<string> PieceTypes = new List<string>(new string[] { "Pawn", "Knight", "Bishop", "Rook", "Queen", "King" }); //0-p,1-k,2-b,3-r,4-q,5-k
+        private List<ChessPieceUnit> BlackPieces = new List<ChessPieceUnit>();
         public Game()
         {
             this.InitializeComponent();
@@ -38,10 +39,13 @@ namespace Test1
                         ChessPieceUnit x = new ChessPieceUnit();
                         if (j == 0)
                         {
-                            x.SetPieceType(PieceTypes[0]);
                             x.SetPieceTeam(false);
                             Image PieceImage = new Image();
-                            PieceImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_rook.png"));
+                            if (i == 0 || i == 7) { x.SetPieceType(PieceTypes[3]); PieceImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_rook.png")); }
+                            else if (i == 1 || i == 6) { x.SetPieceType(PieceTypes[2]); PieceImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_knight.png")); }
+                            else if (i == 2 || i == 5) { x.SetPieceType(PieceTypes[1]); PieceImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_bishop.png")); }
+                            else if (i == 3) { x.SetPieceType(PieceTypes[4]); PieceImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_queen.png")); }
+                            else if (i == 4) { x.SetPieceType(PieceTypes[4]); PieceImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_king.png")); }
                             PieceImage.Width = 80;
                             PieceImage.Height = 80;
                             PieceImage.HorizontalAlignment = HorizontalAlignment.Left;
@@ -50,7 +54,7 @@ namespace Test1
                             Chessboard.Children.Add(PieceImage);
 
                         }
-                        if (j == 1)
+                        else if (j == 1)
                         {
                             x.SetPieceType(PieceTypes[0]);
                             x.SetPieceTeam(false);
@@ -64,14 +68,9 @@ namespace Test1
                             Chessboard.Children.Add(PieceImage);
 
                         }
-                        /* Image PieceImage = new Image();
-                         PieceImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_bishop.png"));
-                         PieceImage.Width = 80;
-                         PieceImage.Height = 80;
-                         PieceImage.HorizontalAlignment = HorizontalAlignment.Left;
-                         PieceImage.VerticalAlignment = VerticalAlignment.Top;
-                         PieceImage.Margin = new Thickness(80*i,0,0,0);
-                         Chessboard.Children.Add(PieceImage); */
+
+                        BlackPieces.Add(x);
+                        
                     }
                 }
             }

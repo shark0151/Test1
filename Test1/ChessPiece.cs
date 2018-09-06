@@ -37,11 +37,6 @@ namespace Test1
             TeamColour = team;
         }
 
-        private class MovePiece
-        {
-
-        }
-
-        
+                
     }
 }
