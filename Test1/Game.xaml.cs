@@ -30,6 +30,23 @@ namespace Test1
         {
             this.InitializeComponent();
             SetTable();
+            InitTable();
+
+            void InitTable()
+            {
+                for(int i = 0;i<8;i++)
+                    for(int j = 0; j<8;j++)
+                    {
+                        Button EmptySquare = new Button();
+                        EmptySquare.Width = 80;
+                        EmptySquare.Height = 80;
+                        EmptySquare.HorizontalAlignment = HorizontalAlignment.Left;
+                        EmptySquare.VerticalAlignment = VerticalAlignment.Top;
+                        EmptySquare.Margin = new Thickness(80 * i, 80*j, 0, 0);
+                        EmptySquare.Content = "gg";
+                        Chessboard.Children.Add(EmptySquare);
+                    }
+            }
             void SetTable()
             {
                 for (int i = 0; i < 8; i++)
@@ -70,7 +87,6 @@ namespace Test1
                         }
 
                         BlackPieces.Add(x);
-                        
                     }
                 }
             }
@@ -87,8 +103,6 @@ namespace Test1
                 PieceImage.Height = 80;
                 
             }
-
-
         }
         
     }

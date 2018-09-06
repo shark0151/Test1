@@ -31,7 +31,7 @@ namespace Test1
         {
             MediaElement mediaElement = new MediaElement();
             var synth = new Windows.Media.SpeechSynthesis.SpeechSynthesizer();
-            Windows.Media.SpeechSynthesis.SpeechSynthesisStream stream = await synth.SynthesizeTextToStreamAsync("Prepare to be defeated");
+            Windows.Media.SpeechSynthesis.SpeechSynthesisStream stream = await synth.SynthesizeTextToStreamAsync("Welcome to my humble abode. Prepare to be defeated");
             mediaElement.SetSource(stream, stream.ContentType);
             mediaElement.Play();
             this.Frame.Navigate(typeof(Game), null);
