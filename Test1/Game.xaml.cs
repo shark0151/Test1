@@ -26,6 +26,7 @@ namespace Test1
     {
         private List<string> PieceTypes = new List<string>(new string[] { "Pawn", "Knight", "Bishop", "Rook", "Queen", "King" }); //0-p,1-k,2-b,3-r,4-q,5-k
         private List<ChessPieceUnit> BlackPieces = new List<ChessPieceUnit>();
+        private List<List<ChessboardSquare>> BoardArray = new List<List<ChessboardSquare>>();
         public Game()
         {
             this.InitializeComponent();
@@ -34,18 +35,18 @@ namespace Test1
 
             void InitTable()
             {
-                for(int i = 0;i<8;i++)
-                    for(int j = 0; j<8;j++)
+                for (int i = 0; i < 8; i++)
+                {
+                    BoardArray.Add(new List<ChessboardSquare>());
+                    for (int j = 0; j < 8; j++)
                     {
-                        Button EmptySquare = new Button();
-                        EmptySquare.Width = 80;
-                        EmptySquare.Height = 80;
-                        EmptySquare.HorizontalAlignment = HorizontalAlignment.Left;
-                        EmptySquare.VerticalAlignment = VerticalAlignment.Top;
-                        EmptySquare.Margin = new Thickness(80 * i, 80*j, 0, 0);
-                        EmptySquare.Content = "gg";
-                        Chessboard.Children.Add(EmptySquare);
+                        ChessboardSquare x = new ChessboardSquare();
+                        x.SetLocation(new Thickness(80 * i, 80 * j, 0, 0), "" + i + j);
+                        BoardArray[i].Add(x);
+                        Chessboard.Children.Add(BoardArray[i][j].GetSquare());
+                        //Chessboard.Children.Add(x.GetSquare());
                     }
+                }
             }
             void SetTable()
             {
@@ -104,6 +105,30 @@ namespace Test1
                 
             }
         }
-        
+
+        public class ChessboardSquare
+        {
+            private Button EmptySquare = new Button();
+            public ChessboardSquare()
+            {                
+                EmptySquare.Width = 80;
+                EmptySquare.Height = 80;
+                EmptySquare.HorizontalAlignment = HorizontalAlignment.Left;
+                EmptySquare.VerticalAlignment = VerticalAlignment.Top;
+                EmptySquare.Margin = new Thickness(0, 0, 0, 0);     //I need to store i,j somewhere so i can access the squares later and a way to add pieces to them
+                EmptySquare.Content = "gg";
+            }
+            public void SetLocation(Thickness x, string y)
+            {
+                EmptySquare.Margin = x;
+                EmptySquare.Content = y;
+            }
+            public Button GetSquare()
+            {
+                return EmptySquare;
+            }
+        }
+
+
     }
 }
