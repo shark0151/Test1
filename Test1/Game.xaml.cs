@@ -22,32 +22,38 @@ namespace Test1
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
+    
     public sealed partial class Game : Page
     {
-        private List<string> PieceTypes = new List<string>(new string[] { "Pawn", "Knight", "Bishop", "Rook", "Queen", "King" }); //0-p,1-k,2-b,3-r,4-q,5-k
-        private List<ChessboardSquare> BlackPieces = new List<ChessboardSquare>();
-        private List<List<ChessboardSquare>> BoardArray = new List<List<ChessboardSquare>>();
+        static List<string> PieceTypes = new List<string>(new string[] { "Pawn", "Knight", "Bishop", "Rook", "Queen", "King", "None" }); //0-p,1-k,2-b,3-r,4-q,5-k,6-na
+        public static List<List<ChessPiece>> BoardArray = new List<List<ChessPiece>>();
+        public static Grid PiecesGrid = new Grid();
         public Game()
         {
             this.InitializeComponent();
             InitTable();
-            SetTable();            
-
+            SetTableAI();
+            SetTablePlayer();
+            EnablePlayer();
+            
             void InitTable()
             {
+                Chessboard.Children.Add(PiecesGrid);
                 for (int i = 0; i < 8; i++)
                 {
-                    BoardArray.Add(new List<ChessboardSquare>());
+                    BoardArray.Add(new List<ChessPiece>());
                     for (int j = 0; j < 8; j++)
                     {
-                        ChessboardSquare x = new ChessboardSquare();
-                        x.SetLocation(new Thickness(80 * i, 80 * j, 0, 0), "" + i + j);
+                        ChessPiece x = new ChessPiece();
+                        x.SetLocation(new Thickness(80 * i, 80 * j, 0, 0),i,j);
                         BoardArray[i].Add(x);
-                        Chessboard.Children.Add(BoardArray[i][j].GetSquare());
+                        BoardArray[i][j].SetPieceType(PieceTypes[6]);
+                        PiecesGrid.Children.Add(BoardArray[i][j].GetSquare());
                     }
                 }
             }
-            void SetTable()
+ 
+            void SetTableAI()
             {
                 for (int i = 0; i < 8; i++)
                 {
@@ -56,61 +62,68 @@ namespace Test1
                         
                         if (j == 0)
                         {
-                            BoardArray[i][j].SetPieceTeam(false);                            
-                            if (i == 0 || i == 7) { BoardArray[i][j].SetPieceType(PieceTypes[3]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_rook.png"))); BoardArray[i][j].SetPieceActive(true); }
-                            else if (i == 1 || i == 6) { BoardArray[i][j].SetPieceType(PieceTypes[2]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_knight.png"))); BoardArray[i][j].SetPieceActive(true); }
-                            else if (i == 2 || i == 5) { BoardArray[i][j].SetPieceType(PieceTypes[1]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_bishop.png"))); BoardArray[i][j].SetPieceActive(true); }
-                            else if (i == 3) { BoardArray[i][j].SetPieceType(PieceTypes[4]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_queen.png"))); BoardArray[i][j].SetPieceActive(true); }
-                            else if (i == 4) { BoardArray[i][j].SetPieceType(PieceTypes[4]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_king.png"))); BoardArray[i][j].SetPieceActive(true); }
+                            BoardArray[i][j].SetPieceTeam("Black");                            
+                            if (i == 0 || i == 7) { BoardArray[i][j].SetPieceType(PieceTypes[3]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_rook.png"))); BoardArray[i][j].SetHasPiece(true); }
+                            else if (i == 1 || i == 6) { BoardArray[i][j].SetPieceType(PieceTypes[2]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_knight.png"))); BoardArray[i][j].SetHasPiece(true); }
+                            else if (i == 2 || i == 5) { BoardArray[i][j].SetPieceType(PieceTypes[1]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_bishop.png"))); BoardArray[i][j].SetHasPiece(true); }
+                            else if (i == 3) { BoardArray[i][j].SetPieceType(PieceTypes[4]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_queen.png"))); BoardArray[i][j].SetHasPiece(true); }
+                            else if (i == 4) { BoardArray[i][j].SetPieceType(PieceTypes[4]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_king.png"))); BoardArray[i][j].SetHasPiece(true); }
                            
                         }
                         else if (j == 1)
                         {
                             BoardArray[i][j].SetPieceType(PieceTypes[0]);
-                            BoardArray[i][j].SetPieceTeam(false);
+                            BoardArray[i][j].SetPieceTeam("Black");
                             BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_pawn.png")));
-                            BoardArray[i][j].SetPieceActive(true);
+                            BoardArray[i][j].SetHasPiece(true);
                         }
 
-                        BlackPieces.Add(BoardArray[i][j]);
                     }
                 }
             }
-            
-        }
 
-        public class ChessboardSquare : ChessPiece
-        {
-            private Grid ChessSquare = new Grid();
-            private Button SquareSelect = new Button();
-            
-            public ChessboardSquare()
-            {                
-                SquareSelect.Width = 80;
-                SquareSelect.Height = 80;
-                SquareSelect.HorizontalAlignment = HorizontalAlignment.Center;
-                SquareSelect.VerticalAlignment = VerticalAlignment.Center;
-                SquareSelect.Margin = new Thickness(0, 0, 0, 0);
-                SquareSelect.Content = "";
-
-                ChessSquare.Width = 80;
-                ChessSquare.HorizontalAlignment = HorizontalAlignment.Left;
-                ChessSquare.VerticalAlignment = VerticalAlignment.Top;
-                ChessSquare.Height = 80;
-                ChessSquare.Children.Add(GetImage());
-                ChessSquare.Children.Add(SquareSelect);
-            }
-            public void SetLocation(Thickness x, string y)
+            void SetTablePlayer()
             {
-                ChessSquare.Margin = x;
-                SquareSelect.Content = y;
+                for (int i = 0; i < 8; i++)
+                {
+                    for (int j = 6; j < 8; j++)
+                    {
+
+                        if (j == 7)
+                        {
+                            BoardArray[i][j].SetPieceTeam("White");
+                            if (i == 0 || i == 7) { BoardArray[i][j].SetPieceType(PieceTypes[3]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/w_rook.png"))); BoardArray[i][j].SetHasPiece(true); }
+                            else if (i == 1 || i == 6) { BoardArray[i][j].SetPieceType(PieceTypes[2]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/w_knight.png"))); BoardArray[i][j].SetHasPiece(true); }
+                            else if (i == 2 || i == 5) { BoardArray[i][j].SetPieceType(PieceTypes[1]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/w_bishop.png"))); BoardArray[i][j].SetHasPiece(true); }
+                            else if (i == 3) { BoardArray[i][j].SetPieceType(PieceTypes[4]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/w_queen.png"))); BoardArray[i][j].SetHasPiece(true); }
+                            else if (i == 4) { BoardArray[i][j].SetPieceType(PieceTypes[4]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/w_king.png"))); BoardArray[i][j].SetHasPiece(true); }
+
+                        }
+                        else if (j == 6)
+                        {
+                            BoardArray[i][j].SetPieceType(PieceTypes[0]);
+                            BoardArray[i][j].SetPieceTeam("White");
+                            BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/w_pawn.png")));
+                            BoardArray[i][j].SetHasPiece(true);
+                        }
+
+                    }
+                }
             }
-            public Grid GetSquare()
+
+            void EnablePlayer()
             {
-                return ChessSquare;
+                for (int i = 0; i < 8; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                            BoardArray[i][j].EnablePlayer("White");
+                    }
+                }
             }
+
         }
-
-
+        
     }
+
 }

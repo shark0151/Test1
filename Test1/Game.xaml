@@ -47,7 +47,7 @@
 
 
 
-        <Grid Name="Chessboard" HorizontalAlignment="Center" Height="640" Width="640" Margin="0,0,0,0" VerticalAlignment="Center">
+        <Grid x:Name="Chessboard" HorizontalAlignment="Center" Height="640" Width="640" Margin="0,0,0,0" VerticalAlignment="Center">
 
             <Rectangle Name="A8" HorizontalAlignment="Left" Height="80" Margin="0,0,0,0" VerticalAlignment="Top" Width="80" Fill="Beige" Stroke="Black" StrokeThickness="2"/>
             <Rectangle Name="A6" HorizontalAlignment="Left" Height="80" Margin="0,160,0,0" VerticalAlignment="Top" Width="80" Fill="Beige" Stroke="Black" StrokeThickness="2"/>
