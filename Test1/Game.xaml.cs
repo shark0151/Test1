@@ -25,9 +25,13 @@ namespace Test1
     
     public sealed partial class Game : Page
     {
-        static List<string> PieceTypes = new List<string>(new string[] { "Pawn", "Knight", "Bishop", "Rook", "Queen", "King", "None" }); //0-p,1-k,2-b,3-r,4-q,5-k,6-na
+        public static List<string> PieceTypes = new List<string>(new string[] { "Pawn", "Knight", "Bishop", "Rook", "Queen", "King", "None" }); //0-p,1-k,2-b,3-r,4-q,5-k,6-na
         public static List<List<ChessPiece>> BoardArray = new List<List<ChessPiece>>();
         public static Grid PiecesGrid = new Grid();
+        public static int stx = 0, sty = 0;
+        public static int endx = 0, endy = 0;
+        public static string Turn = "White";
+        public static bool Selected = false;
         public Game()
         {
             this.InitializeComponent();
@@ -64,8 +68,8 @@ namespace Test1
                         {
                             BoardArray[i][j].SetPieceTeam("Black");                            
                             if (i == 0 || i == 7) { BoardArray[i][j].SetPieceType(PieceTypes[3]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_rook.png"))); BoardArray[i][j].SetHasPiece(true); }
-                            else if (i == 1 || i == 6) { BoardArray[i][j].SetPieceType(PieceTypes[2]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_knight.png"))); BoardArray[i][j].SetHasPiece(true); }
-                            else if (i == 2 || i == 5) { BoardArray[i][j].SetPieceType(PieceTypes[1]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_bishop.png"))); BoardArray[i][j].SetHasPiece(true); }
+                            else if (i == 1 || i == 6) { BoardArray[i][j].SetPieceType(PieceTypes[1]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_knight.png"))); BoardArray[i][j].SetHasPiece(true); }
+                            else if (i == 2 || i == 5) { BoardArray[i][j].SetPieceType(PieceTypes[2]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_bishop.png"))); BoardArray[i][j].SetHasPiece(true); }
                             else if (i == 3) { BoardArray[i][j].SetPieceType(PieceTypes[4]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_queen.png"))); BoardArray[i][j].SetHasPiece(true); }
                             else if (i == 4) { BoardArray[i][j].SetPieceType(PieceTypes[4]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_king.png"))); BoardArray[i][j].SetHasPiece(true); }
                            
@@ -93,8 +97,8 @@ namespace Test1
                         {
                             BoardArray[i][j].SetPieceTeam("White");
                             if (i == 0 || i == 7) { BoardArray[i][j].SetPieceType(PieceTypes[3]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/w_rook.png"))); BoardArray[i][j].SetHasPiece(true); }
-                            else if (i == 1 || i == 6) { BoardArray[i][j].SetPieceType(PieceTypes[2]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/w_knight.png"))); BoardArray[i][j].SetHasPiece(true); }
-                            else if (i == 2 || i == 5) { BoardArray[i][j].SetPieceType(PieceTypes[1]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/w_bishop.png"))); BoardArray[i][j].SetHasPiece(true); }
+                            else if (i == 1 || i == 6) { BoardArray[i][j].SetPieceType(PieceTypes[1]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/w_knight.png"))); BoardArray[i][j].SetHasPiece(true); }
+                            else if (i == 2 || i == 5) { BoardArray[i][j].SetPieceType(PieceTypes[2]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/w_bishop.png"))); BoardArray[i][j].SetHasPiece(true); }
                             else if (i == 3) { BoardArray[i][j].SetPieceType(PieceTypes[4]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/w_queen.png"))); BoardArray[i][j].SetHasPiece(true); }
                             else if (i == 4) { BoardArray[i][j].SetPieceType(PieceTypes[4]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/w_king.png"))); BoardArray[i][j].SetHasPiece(true); }
 
@@ -117,7 +121,7 @@ namespace Test1
                 {
                     for (int j = 0; j < 8; j++)
                     {
-                            BoardArray[i][j].EnablePlayer("White");
+                            BoardArray[i][j].EnablePlayer(Turn,"");
                     }
                 }
             }

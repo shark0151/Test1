@@ -19,9 +19,8 @@ namespace Test1
         private Image PieceImage = new Image();
         private Grid ChessSquare = new Grid();
         private Button SquareSelect = new Button();
-        private List<int> posxy = new List<int>(new int[] { 0, 0 });
-        private static List<int> Spos = new List<int>(new int[] { -1, -1 });
-        private List<int> Epos = new List<int>(new int[] { 0, 0 });
+        private int posx, posy;
+                
 
         public ChessPiece()
         {
@@ -30,6 +29,8 @@ namespace Test1
             PieceImage = new Image();
             PieceImage.Width = 80;
             PieceImage.Height = 80;
+            PieceImage.SetValue(Canvas.ZIndexProperty, 100);
+            PieceImage.SetValue(Canvas.IsHitTestVisibleProperty,false);
             SquareSelect.Click += Piece_Click;
 
             SquareSelect.Width = 80;
@@ -51,9 +52,10 @@ namespace Test1
 
         
 
-        public void RefreshTable()
+        public void RefreshTable(string Turn)
         {
             PiecesGrid.Children.Clear();
+            Selected = false;
             for (int i = 0; i < 8; i++)
             {
                 
@@ -61,14 +63,18 @@ namespace Test1
                 {
                     BoardArray[i][j].SetLocation(new Thickness(80 * i, 80 * j, 0, 0), i, j);
                     PiecesGrid.Children.Add(BoardArray[i][j].GetSquare());
-                    BoardArray[i][j].EnablePlayer("White");
+                    BoardArray[i][j].DisablePlayer();
+                    BoardArray[i][j].EnablePlayer(Turn,"");
+                    
                 }
             }
         }
 
-        public void EnablePlayer(string TeamTurn)//by team
+        
+
+        public void EnablePlayer(string TeamTurn, string Secondary = "None")//by team
         {
-            if(TeamColour==TeamTurn || TeamColour=="None") //enables all. fix this
+            if(TeamColour==TeamTurn||TeamColour==Secondary)
             SquareSelect.IsEnabled = true;
         }
 
@@ -80,10 +86,10 @@ namespace Test1
         public void SetLocation(Thickness x, int i, int j)
         {
             ChessSquare.Margin = x;
-            SquareSelect.Content = i.ToString() + j.ToString();
-            posxy[0] = i;
-            posxy[1] = j;
-
+            List<string> sqnames = new List<string>(new string[] { "A", "B", "C", "D", "E", "F", "G", "H" });
+            SquareSelect.Content = sqnames[i] + j.ToString();
+            posx = i;
+            posy = j;
 
         }
         public Grid GetSquare()
@@ -127,42 +133,132 @@ namespace Test1
 
             //BoardArray[Spos[0]][Spos[1]].SetLocation(new Thickness(80 * Epos[0], 80 * Epos[1], 0, 0), Epos[0], Epos[1]);
             //BoardArray[Epos[0]][Epos[1]].SetLocation(new Thickness(80 * Spos[0], 80 * Spos[1], 0, 0), Spos[0], Spos[1]);
-            ChessPiece Piece = BoardArray[Spos[0]][Spos[1]];
-            BoardArray[Spos[0]][Spos[1]] = BoardArray[Epos[0]][Epos[1]];
-            BoardArray[Epos[0]][Epos[1]] = Piece;
+            ChessPiece Piece = BoardArray[stx][sty];
+            BoardArray[stx][sty] = BoardArray[endx][endy];
+            BoardArray[endx][endy] = Piece;
         }
 
         private void Piece_Click(object sender, RoutedEventArgs e)
         {
-            if (Spos[0] < 0)
+            int direction;//-1 up/left, 1 down/right;
+            if(Turn == "White") { direction = -1; } else { direction = 1; }
+            if (TeamColour == Turn)
             {
-                Spos = posxy;
-                for (int i = 0; i < 8; i++)
+                if (!Selected)
                 {
-                    for (int j = 0; j < 8; j++)
+                    Selected = true;
+                    stx = posx;
+                    sty = posy;
+                    for (int i = 0; i < 8; i++)
                     {
-                        BoardArray[i][j].DisablePlayer();
+                        for (int j = 0; j < 8; j++)
+                        {
+                            BoardArray[i][j].DisablePlayer();
+                        }
                     }
-                }
+                    BoardArray[posx][posy].EnablePlayer(Turn);
+                    switch (PieceType)
+                    {
+                        case "Pawn":
+                            if (Turn == "White")
+                            {
+                                if (posy + direction >= 0)
+                                    BoardArray[posx][posy + direction].EnablePlayer(Turn);
+                            }
+                            else
+                            {
+                                if (posy + direction < 8)
+                                    BoardArray[posx][posy + direction].EnablePlayer(Turn);
+                            }
+                            break;
 
-                ChessPiece CurrentPiece = BoardArray[posxy[0]][posxy[1]];
-                CurrentPiece.EnablePlayer("White");
+                        case "Knight":
+                            if (posx - 1 >= 0 & posy - 2 >= 0)
+                            {
+                                BoardArray[posx - 1][posy - 2].EnablePlayer(Turn);
+                            }
+                            if (posx + 1 < 8 & posy + 2 < 8)
+                            {
+                                BoardArray[posx + 1][posy + 2].EnablePlayer(Turn);
+                            }
+                            if (posx + 1 < 8 & posy - 2 >= 0)
+                            {
+                                BoardArray[posx + 1][posy - 2].EnablePlayer(Turn);
+                            }
+                            if (posx - 1 >= 0 & posy + 2 < 8)
+                            {
+                                BoardArray[posx - 1][posy + 2].EnablePlayer(Turn);
+                            }
 
-                if (CurrentPiece.GetPieceType() == "Pawn")//if pawn
-                {
-                    if (posxy[1] < 8)
-                        BoardArray[posxy[0]][posxy[1] - 1].EnablePlayer("White");
+                            if (posx - 2 >= 0 & posy - 1 >= 0)
+                            {
+                                BoardArray[posx - 2][posy - 1].EnablePlayer(Turn);
+                            }
+                            if (posx + 2 < 8 & posy + 1 < 8)
+                            {
+                                BoardArray[posx + 2][posy + 1].EnablePlayer(Turn);
+                            }
+                            if (posx + 2 < 8 & posy - 1 >= 0)
+                            {
+                                BoardArray[posx + 2][posy - 1].EnablePlayer(Turn);
+                            }
+                            if (posx - 2 >= 0 & posy + 1 < 8)
+                            {
+                                BoardArray[posx - 2][posy + 1].EnablePlayer(Turn);
+                            }
+                            break;
+
+                        case "Bishop": //bishop can jump
+                            for(int i = 0; i<8; i++)
+                            {
+
+                                if (posx + i < 8 & posy + i < 8)
+                                {
+                                    BoardArray[posx + i][posy + i].EnablePlayer(Turn);
+                                }
+                            }
+                            for (int i = 0; i < 8; i++)
+                            {
+
+                                if (posx - i >= 0 & posy + i < 8)
+                                {
+                                    BoardArray[posx - i][posy + i].EnablePlayer(Turn);
+                                }
+                                
+                            }
+                            for (int i = 0; i < 8; i++)
+                            {
+
+                                if (posx + i < 8 & posy - i >= 0)
+                                {
+                                    BoardArray[posx + i][posy - i].EnablePlayer(Turn);
+                                }
+                                
+                            }
+                            for (int i = 0; i < 8; i++)
+                            {
+
+                                if (posx - i >= 0 & posy - i >= 0)
+                                {
+                                    BoardArray[posx - i][posy - i].EnablePlayer(Turn);
+                                }
+                            }
+                            break;
+                    }
+
                 }
+                
             }
             else
             {
-                Epos = posxy;
+                endx = posx;
+                endy = posy;
                 MovePiece();
-                Spos[0] = -1;
-                Spos[1] = -1;
-                RefreshTable();
-            }
+                if(Turn =="White") { Turn = "Black"; } else { Turn = "White"; }
+                RefreshTable(Turn);
 
+            }
+            
         }
         
     }
