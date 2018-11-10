@@ -32,6 +32,7 @@ namespace Test1
         public static int endx = 0, endy = 0;
         public static string Turn = "White";
         public static bool Selected = false;
+       
         public Game()
         {
             this.InitializeComponent();

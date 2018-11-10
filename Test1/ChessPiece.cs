@@ -27,6 +27,7 @@ namespace Test1
 
         public ChessPiece()
         {
+            
             TeamColour = "None";
             PieceType = "None";
             PieceImage = new Image();
@@ -35,6 +36,7 @@ namespace Test1
             PieceImage.SetValue(Canvas.ZIndexProperty, 100);
             PieceImage.SetValue(Canvas.IsHitTestVisibleProperty,false);
             SquareSelect.Click += Piece_Click;
+            SquareSelect.Style = (Style)Application.Current.Resources["Piece"];
 
             SquareSelect.Width = 80;
             SquareSelect.Height = 80;
@@ -45,9 +47,9 @@ namespace Test1
             SquareSelect.IsEnabled = false;
             SquareSelect.Background = new SolidColorBrush(Color.FromArgb(100,0,0,20));
             SquareSelect.BorderThickness = new Thickness(0);
-            SquareSelect.PointerMoved += Highlight;
+            //SquareSelect.PointerMoved += Highlight;
             //SquareSelect.PointerEntered += Highlight;
-            SquareSelect.PointerExited += Unhighlight;
+            //SquareSelect.PointerExited += Unhighlight;
             
 
             ChessSquare.Width = 80;
