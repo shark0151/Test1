@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using static Test1.Game;
 
@@ -40,7 +43,12 @@ namespace Test1
             SquareSelect.Margin = new Thickness(0, 0, 0, 0);
             SquareSelect.Content = "";
             SquareSelect.IsEnabled = false;
-
+            SquareSelect.Background = new SolidColorBrush(Color.FromArgb(100,0,0,20));
+            SquareSelect.BorderThickness = new Thickness(0);
+            SquareSelect.PointerMoved += Highlight;
+            //SquareSelect.PointerEntered += Highlight;
+            SquareSelect.PointerExited += Unhighlight;
+            
 
             ChessSquare.Width = 80;
             ChessSquare.HorizontalAlignment = HorizontalAlignment.Left;
@@ -49,8 +57,16 @@ namespace Test1
             ChessSquare.Children.Add(GetImage());
             ChessSquare.Children.Add(SquareSelect);
         }
-
-        
+                
+        private void Highlight (object sender, PointerRoutedEventArgs e)
+        {
+            SquareSelect.Background = new SolidColorBrush(Color.FromArgb(100, 50, 50, 150));
+            
+        }
+        private void Unhighlight(object sender, PointerRoutedEventArgs e)
+        {
+            SquareSelect.Background = new SolidColorBrush(Color.FromArgb(100, 0, 0, 20));
+        }
 
         public void RefreshTable(string Turn)
         {
@@ -72,9 +88,9 @@ namespace Test1
 
         
 
-        public void EnablePlayer(string TeamTurn, string Secondary = "None")//by team
+        public void EnablePlayer(string TeamTurn, string Secondary = "None",string Enemy = "")//by team
         {
-            if(TeamColour==TeamTurn||TeamColour==Secondary)
+            if(TeamColour==TeamTurn||TeamColour==Secondary||TeamColour == Enemy)
             SquareSelect.IsEnabled = true;
         }
 
@@ -133,15 +149,25 @@ namespace Test1
 
             //BoardArray[Spos[0]][Spos[1]].SetLocation(new Thickness(80 * Epos[0], 80 * Epos[1], 0, 0), Epos[0], Epos[1]);
             //BoardArray[Epos[0]][Epos[1]].SetLocation(new Thickness(80 * Spos[0], 80 * Spos[1], 0, 0), Spos[0], Spos[1]);
-            ChessPiece Piece = BoardArray[stx][sty];
-            BoardArray[stx][sty] = BoardArray[endx][endy];
-            BoardArray[endx][endy] = Piece;
+            if(BoardArray[endx][endy].TeamColour != BoardArray[stx][sty].TeamColour)
+            {
+                ChessPiece Piece = BoardArray[stx][sty];
+                BoardArray[endx][endy] = Piece;
+                BoardArray[stx][sty] = new ChessPiece();
+            }
+            else
+            {
+                ChessPiece Piece = BoardArray[stx][sty];
+                BoardArray[stx][sty] = BoardArray[endx][endy];
+                BoardArray[endx][endy] = Piece;
+            }
         }
 
         private void Piece_Click(object sender, RoutedEventArgs e)
         {
             int direction;//-1 up/left, 1 down/right;
-            if(Turn == "White") { direction = -1; } else { direction = 1; }
+            string enemy = "Black";
+            if(Turn == "White") { direction = -1; enemy = "Black"; } else { direction = 1; enemy = "White"; }
             if (TeamColour == Turn)
             {
                 if (!Selected)
@@ -154,98 +180,148 @@ namespace Test1
                         for (int j = 0; j < 8; j++)
                         {
                             BoardArray[i][j].DisablePlayer();
+                            BoardArray[i][j].EnablePlayer(Turn,"");
                         }
                     }
                     BoardArray[posx][posy].EnablePlayer(Turn);
                     switch (PieceType)
                     {
-                        case "Pawn":
+                        case "Pawn": //attack mode not implemented
                             if (Turn == "White")
                             {
                                 if (posy + direction >= 0)
-                                    BoardArray[posx][posy + direction].EnablePlayer(Turn);
+                                    BoardArray[posx][posy + direction].EnablePlayer(Turn, Enemy: enemy);
                             }
                             else
                             {
                                 if (posy + direction < 8)
-                                    BoardArray[posx][posy + direction].EnablePlayer(Turn);
+                                    BoardArray[posx][posy + direction].EnablePlayer(Turn, Enemy: enemy);
                             }
                             break;
 
                         case "Knight":
                             if (posx - 1 >= 0 & posy - 2 >= 0)
                             {
-                                BoardArray[posx - 1][posy - 2].EnablePlayer(Turn);
+                                BoardArray[posx - 1][posy - 2].EnablePlayer(Turn, Enemy: enemy);
                             }
                             if (posx + 1 < 8 & posy + 2 < 8)
                             {
-                                BoardArray[posx + 1][posy + 2].EnablePlayer(Turn);
+                                BoardArray[posx + 1][posy + 2].EnablePlayer(Turn, Enemy: enemy);
                             }
                             if (posx + 1 < 8 & posy - 2 >= 0)
                             {
-                                BoardArray[posx + 1][posy - 2].EnablePlayer(Turn);
+                                BoardArray[posx + 1][posy - 2].EnablePlayer(Turn, Enemy: enemy);
                             }
                             if (posx - 1 >= 0 & posy + 2 < 8)
                             {
-                                BoardArray[posx - 1][posy + 2].EnablePlayer(Turn);
+                                BoardArray[posx - 1][posy + 2].EnablePlayer(Turn, Enemy: enemy);
                             }
 
                             if (posx - 2 >= 0 & posy - 1 >= 0)
                             {
-                                BoardArray[posx - 2][posy - 1].EnablePlayer(Turn);
+                                BoardArray[posx - 2][posy - 1].EnablePlayer(Turn, Enemy: enemy);
                             }
                             if (posx + 2 < 8 & posy + 1 < 8)
                             {
-                                BoardArray[posx + 2][posy + 1].EnablePlayer(Turn);
+                                BoardArray[posx + 2][posy + 1].EnablePlayer(Turn, Enemy: enemy);
                             }
                             if (posx + 2 < 8 & posy - 1 >= 0)
                             {
-                                BoardArray[posx + 2][posy - 1].EnablePlayer(Turn);
+                                BoardArray[posx + 2][posy - 1].EnablePlayer(Turn, Enemy: enemy);
                             }
                             if (posx - 2 >= 0 & posy + 1 < 8)
                             {
-                                BoardArray[posx - 2][posy + 1].EnablePlayer(Turn);
+                                BoardArray[posx - 2][posy + 1].EnablePlayer(Turn, Enemy: enemy);
                             }
                             break;
 
-                        case "Bishop": //bishop can jump
-                            for(int i = 0; i<8; i++)
+                        case "Bishop":
+                            
+                            for(int i = 1; i<8; i++)
                             {
 
                                 if (posx + i < 8 & posy + i < 8)
                                 {
-                                    BoardArray[posx + i][posy + i].EnablePlayer(Turn);
+                                    if (!BoardArray[posx + i][posy + i].HasPiece)
+                                    {
+                                        BoardArray[posx + i][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                    }
+                                    else if (BoardArray[posx + i][posy + i].TeamColour==enemy)
+                                    {
+                                        BoardArray[posx + i][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        break;
+                                    }
+                                    else break;
                                 }
                             }
-                            for (int i = 0; i < 8; i++)
+                            for (int i = 1; i < 8; i++)
                             {
 
                                 if (posx - i >= 0 & posy + i < 8)
                                 {
-                                    BoardArray[posx - i][posy + i].EnablePlayer(Turn);
+                                    if (!BoardArray[posx - i][posy + i].HasPiece)
+                                    {
+                                        BoardArray[posx - i][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                    }
+                                    else if (BoardArray[posx - i][posy + i].TeamColour == enemy)
+                                    {
+                                        BoardArray[posx - i][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        break;
+                                    }
+                                    else break;
                                 }
                                 
                             }
-                            for (int i = 0; i < 8; i++)
+                            for (int i = 1; i < 8; i++)
                             {
 
                                 if (posx + i < 8 & posy - i >= 0)
                                 {
-                                    BoardArray[posx + i][posy - i].EnablePlayer(Turn);
+                                    if (!BoardArray[posx + i][posy - i].HasPiece)
+                                    {
+                                        BoardArray[posx + i][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                    }
+                                    else if(BoardArray[posx + i][posy - i].TeamColour == enemy)
+                                    {
+                                        BoardArray[posx + i][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        break;
+                                    }
+                                    else break;
                                 }
                                 
                             }
-                            for (int i = 0; i < 8; i++)
+                            for (int i = 1; i < 8; i++)
                             {
 
                                 if (posx - i >= 0 & posy - i >= 0)
                                 {
-                                    BoardArray[posx - i][posy - i].EnablePlayer(Turn);
+                                    if (!BoardArray[posx - i][posy - i].HasPiece)
+                                    {
+                                        BoardArray[posx - i][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                    }
+                                    else if(BoardArray[posx - i][posy - i].TeamColour == enemy)
+                                    {
+                                        BoardArray[posx - i][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        break;
+                                    }
+                                    else break;
                                 }
                             }
                             break;
                     }
 
+                }
+                else
+                {
+                    Selected = false;
+                    for (int i = 0; i < 8; i++)
+                    {
+                        for (int j = 0; j < 8; j++)
+                        {
+                            BoardArray[i][j].DisablePlayer();
+                            BoardArray[i][j].EnablePlayer(Turn, "");
+                        }
+                    }
                 }
                 
             }
