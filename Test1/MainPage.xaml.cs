@@ -36,8 +36,13 @@ namespace Test1
             Windows.Media.SpeechSynthesis.SpeechSynthesisStream stream = await synth.SynthesizeTextToStreamAsync("Welcome to my humble abode. Prepare to be defeated");
             mediaElement.SetSource(stream, stream.ContentType);
             mediaElement.Play();
-            this.Frame.Navigate(typeof(Game), null);
+            this.Frame.Navigate(typeof(Game), true);
         }
 
+        private void button2_Click(object sender, RoutedEventArgs e)
+        {
+            
+            this.Frame.Navigate(typeof(Game), false);
+        }
     }
 }

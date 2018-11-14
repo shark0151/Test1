@@ -23,7 +23,9 @@ namespace Test1
         private Grid ChessSquare = new Grid();
         private Button SquareSelect = new Button();
         private int posx, posy;
-                
+        private SolidColorBrush highlightcolor = new SolidColorBrush(Color.FromArgb(150, 0, 0, 150));
+        private SolidColorBrush normalcolor = new SolidColorBrush(Color.FromArgb(100, 20, 20, 20));
+
 
         public ChessPiece()
         {
@@ -45,12 +47,9 @@ namespace Test1
             SquareSelect.Margin = new Thickness(0, 0, 0, 0);
             SquareSelect.Content = "";
             SquareSelect.IsEnabled = false;
-            SquareSelect.Background = new SolidColorBrush(Color.FromArgb(100,0,0,50));
+            SquareSelect.Background = normalcolor;
             SquareSelect.BorderThickness = new Thickness(0);
-            //SquareSelect.PointerMoved += Highlight;
-            //SquareSelect.PointerEntered += Highlight;
-            //SquareSelect.PointerExited += Unhighlight;
-            
+                        
 
             ChessSquare.Width = 80;
             ChessSquare.HorizontalAlignment = HorizontalAlignment.Left;
@@ -60,18 +59,11 @@ namespace Test1
             ChessSquare.Children.Add(SquareSelect);
         }
                 
-        private void Highlight (object sender, PointerRoutedEventArgs e)
-        {
-            SquareSelect.Background = new SolidColorBrush(Color.FromArgb(100, 50, 50, 150));
-            
-        }
-        private void Unhighlight(object sender, PointerRoutedEventArgs e)
-        {
-            SquareSelect.Background = new SolidColorBrush(Color.FromArgb(100, 0, 0, 20));
-        }
+        
 
         public void RefreshTable(string Turn)
         {
+            
             PiecesGrid.Children.Clear();
             Selected = false;
             for (int i = 0; i < 8; i++)
@@ -86,16 +78,24 @@ namespace Test1
                     
                 }
             }
+            
+
         }
 
         
 
-        public void EnablePlayer(string TeamTurn, string Secondary = "None",string Enemy = "")//by team
+        public void EnablePlayer(string TeamTurn, string Secondary = "None",string Enemy = "", bool showmove = false)
         {
-            if(TeamColour==TeamTurn||TeamColour==Secondary||TeamColour == Enemy)
-            SquareSelect.IsEnabled = true;
+            if (TeamColour == TeamTurn || TeamColour == Secondary || TeamColour == Enemy)
+            {
+                SquareSelect.IsEnabled = true;
+                if (showmove == true)
+                {
+                    SquareSelect.Background = highlightcolor; //highlight color
+                }
+                else SquareSelect.Background = normalcolor; //normal
+            }
         }
-
         public void DisablePlayer()
         {
             SquareSelect.IsEnabled = false;
@@ -114,7 +114,6 @@ namespace Test1
         {
             return ChessSquare;
         }
-
         public string GetPieceTeam()
         {
             return TeamColour;
@@ -127,12 +126,10 @@ namespace Test1
         {
             PieceType = type;
         }
-
         public void SetPieceTeam(string team)
         {
             TeamColour = team;
         }
-
         public void SetHasPiece(bool pieceactive)
         {
             HasPiece = pieceactive;
@@ -146,11 +143,733 @@ namespace Test1
             PieceImage.Source = imgsource;
         }
 
-        public void MovePiece()
+        private void Ai_Think()
+        {
+            int Score_White = 0, Score_Black = 0, Score= 0;
+            Ai_BoardArray = BoardArray;
+            for(int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    Ai_BoardArray[i][j].DisablePlayer();
+                    if(Ai_BoardArray[i][j].HasPiece)
+                    {
+                        if(Ai_BoardArray[i][j].TeamColour == "Black")
+                        {
+                            switch (Ai_BoardArray[i][j].PieceType)
+                            {
+                                case "Pawn":
+                                    Score = 1;
+                                    break;
+                                case "Knight":
+                                    Score = 2;
+                                    break;
+                                case "Bishop":
+                                    Score = 3;
+                                    break;
+                                case "Rook":
+                                    Score = 4;
+                                    break;
+                                case "Queen":
+                                    Score = 5;
+                                    break;
+                                case "King":
+                                    Score = 6;
+                                    break;
+                            }
+                            Score_Black = Score_Black + Score;
+                        }
+                        if (Ai_BoardArray[i][j].TeamColour == "White")
+                        {
+                            switch (Ai_BoardArray[i][j].PieceType)
+                            {
+                                case "Pawn":
+                                    Score = 1;
+                                    break;
+                                case "Knight":
+                                    Score = 2;
+                                    break;
+                                case "Bishop":
+                                    Score = 3;
+                                    break;
+                                case "Rook":
+                                    Score = 4;
+                                    break;
+                                case "Queen":
+                                    Score = 5;
+                                    break;
+                                case "King":
+                                    Score = 6;
+                                    break;
+                            }
+                            Score_White = Score_White + Score;
+                        }
+                    }
+                }
+            }
+            TryMove(Ai_BoardArray);
+            
+
+
+        }
+
+        private void TryMove(List<List<ChessPiece>> Ai_BoardArray) //pawn can attack forward
         {
 
-            //BoardArray[Spos[0]][Spos[1]].SetLocation(new Thickness(80 * Epos[0], 80 * Epos[1], 0, 0), Epos[0], Epos[1]);
-            //BoardArray[Epos[0]][Epos[1]].SetLocation(new Thickness(80 * Spos[0], 80 * Spos[1], 0, 0), Spos[0], Spos[1]);
+            int direction;//-1 up/left, 1 down/right;
+            string enemy = "";
+            List<int> MaxScore = new List<int>(new int[] { 0, 0, 0, 0, 0 });
+            if (Turn == "White") { direction = -1; enemy = "Black"; } else { direction = 1; enemy = "White"; }
+            void checkscore(int x, int y)
+            {
+                int Score = 0;
+                if (Ai_BoardArray[x][y].TeamColour == enemy)
+                {
+                    switch (Ai_BoardArray[x][y].PieceType)
+                    {
+                        case "Pawn":
+                            Score = 2;
+                            break;
+                        case "Knight":
+                            Score = 3;
+                            break;
+                        case "Bishop":
+                            Score = 4;
+                            break;
+                        case "Rook":
+                            Score = 5;
+                            break;
+                        case "Queen":
+                            Score = 6;
+                            break;
+                        case "King":
+                            Score = 7;
+                            break;
+                    }
+                    if (Score > MaxScore[0])
+                    {
+                        MaxScore[0] = Score;
+                        MaxScore[1] = x;
+                        MaxScore[2] = y;
+                        MaxScore[3] = stx;
+                        MaxScore[4] = sty;
+                    }
+                }
+
+                else
+                {
+                    switch (Ai_BoardArray[x][y].PieceType)
+                    {
+                        case "None":
+                            Score = 1;
+                            break;
+                        case "Pawn":
+                            Score = -1;
+                            break;
+                        case "Knight":
+                            Score = -2;
+                            break;
+                        case "Bishop":
+                            Score = -3;
+                            break;
+                        case "Rook":
+                            Score = -4;
+                            break;
+                        case "Queen":
+                            Score = -5;
+                            break;
+                        case "King":
+                            Score = -6;
+                            break;
+                    }
+                    if (Score > MaxScore[0])
+                    {
+                        MaxScore[0] = Score;
+                        MaxScore[1] = x;
+                        MaxScore[2] = y;
+                        MaxScore[3] = stx;
+                        MaxScore[4] = sty;
+                    }
+                }
+            }
+
+
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+
+                    stx = x;
+                    sty = y;
+                    
+                    if (Ai_BoardArray[x][y].TeamColour == "Black")
+                    {
+                        switch (Ai_BoardArray[x][y].PieceType)
+                        {
+                            case "Pawn":
+                                if (Turn == "White")
+                                {
+                                    if (y + direction >= 0)
+                                    {
+                                        Ai_BoardArray[x][y + direction].EnablePlayer("None", showmove: true);
+                                        checkscore(x, y + direction);
+                                        if (x + 1 < 8)
+                                        {
+                                            Ai_BoardArray[x + 1][y + direction].EnablePlayer(enemy, Secondary: "", showmove: true);
+                                            checkscore(x + 1, y + direction);
+                                        }
+                                        if (x - 1 >= 0)
+                                        {
+                                            Ai_BoardArray[x - 1][y + direction].EnablePlayer(enemy, Secondary: "", showmove: true);
+                                            checkscore(x - 1, y + direction);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (y + direction < 8)
+                                    {
+                                        Ai_BoardArray[x][y + direction].EnablePlayer("None", showmove: true);
+                                        checkscore(x, y + direction);
+                                        if (x + 1 < 8)
+                                        {
+                                            Ai_BoardArray[x + 1][y + direction].EnablePlayer(enemy, Secondary: "", showmove: true);
+                                            checkscore(x + 1, y + direction);
+                                        }
+                                        if (x - 1 >= 0)
+                                        {
+                                            Ai_BoardArray[x - 1][y + direction].EnablePlayer(enemy, Secondary: "", showmove: true);
+                                            checkscore(x - 1, y + direction);
+                                        }
+                                    }
+                                }
+                                break;
+
+                            case "Knight":
+                                if (x - 1 >= 0 & y - 2 >= 0)
+                                {
+                                    Ai_BoardArray[x - 1][y - 2].EnablePlayer(enemy, Enemy: enemy, showmove: true);
+                                    checkscore(x - 1, y - 2);
+                                }
+                                if (x + 1 < 8 & y + 2 < 8)
+                                {
+                                    Ai_BoardArray[x + 1][y + 2].EnablePlayer(enemy, Enemy: enemy, showmove: true);
+                                    checkscore(x + 1, y + 2);
+                                }
+                                if (x + 1 < 8 & y - 2 >= 0)
+                                {
+                                    Ai_BoardArray[x + 1][y - 2].EnablePlayer(enemy, Enemy: enemy, showmove: true);
+                                    checkscore(x + 1, y - 2);
+                                }
+                                if (x - 1 >= 0 & y + 2 < 8)
+                                {
+                                    Ai_BoardArray[x - 1][y + 2].EnablePlayer(enemy, Enemy: enemy, showmove: true);
+                                    checkscore(x - 1, y + 2);
+                                }
+
+                                if (x - 2 >= 0 & y - 1 >= 0)
+                                {
+                                    Ai_BoardArray[x - 2][y - 1].EnablePlayer(enemy, Enemy: enemy, showmove: true);
+                                    checkscore(x - 2, y - 1);
+                                }
+                                if (x + 2 < 8 & y + 1 < 8)
+                                {
+                                    Ai_BoardArray[x + 2][y + 1].EnablePlayer(enemy, Enemy: enemy, showmove: true);
+                                    checkscore(x + 2, y + 1);
+                                }
+                                if (x + 2 < 8 & y - 1 >= 0)
+                                {
+                                    Ai_BoardArray[x + 2][y - 1].EnablePlayer(enemy, Enemy: enemy, showmove: true);
+                                    checkscore(x + 2, y - 1);
+                                }
+                                if (x - 2 >= 0 & y + 1 < 8)
+                                {
+                                    Ai_BoardArray[x - 2][y + 1].EnablePlayer(enemy, Enemy: enemy, showmove: true);
+                                    checkscore(x - 2, y + 1);
+                                }
+                                break;
+
+                            case "Bishop":
+
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x + i < 8 & y + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x + i][y + i].HasPiece)
+                                        {
+                                            Ai_BoardArray[x + i][y + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x + i, y + 1);
+                                        }
+                                        else if (Ai_BoardArray[x + i][y + i].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x + i][y + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x + i, y + i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x - i >= 0 & y + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x - i][y + i].HasPiece)
+                                        {
+                                            Ai_BoardArray[x - i][y + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x - i, y + i);
+                                        }
+                                        else if (Ai_BoardArray[x - i][y + i].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x - i][y + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x - i, y + i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x + i < 8 & y - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x + i][y - i].HasPiece)
+                                        {
+                                            Ai_BoardArray[x + i][y - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x + i, y - i);
+                                        }
+                                        else if (Ai_BoardArray[x + i][y - i].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x + i][y - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x + i, y - i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x - i >= 0 & y - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x - i][y - i].HasPiece)
+                                        {
+                                            Ai_BoardArray[x - i][y - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x - i, y - i);
+                                        }
+                                        else if (Ai_BoardArray[x - i][y - i].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x - i][y - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x - i, y - i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                break;
+
+                            case "Rook":
+
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x + i][y].HasPiece)
+                                        {
+                                            Ai_BoardArray[x + i][y].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x + i, y);
+                                        }
+                                        else if (Ai_BoardArray[x + i][y].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x + i][y].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x + i, y);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x - i][y].HasPiece)
+                                        {
+                                            Ai_BoardArray[x - i][y].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x - i, y);
+                                        }
+                                        else if (Ai_BoardArray[x - i][y].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x - i][y].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x - i, y);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (y + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x][y + i].HasPiece)
+                                        {
+                                            Ai_BoardArray[x][y + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x, y + i);
+                                        }
+                                        else if (Ai_BoardArray[x][y + i].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x][y + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x, y + i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (y - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x][y - i].HasPiece)
+                                        {
+                                            Ai_BoardArray[x][y - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x, y - i);
+                                        }
+                                        else if (Ai_BoardArray[x][y - i].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x][y - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x, y - i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                break;
+
+                            case "Queen":
+                                // up,down
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x + i][y].HasPiece)
+                                        {
+                                            Ai_BoardArray[x + i][y].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x + i, y);
+                                        }
+                                        else if (Ai_BoardArray[x + i][y].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x + i][y].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x + i, y);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x - i][y].HasPiece)
+                                        {
+                                            Ai_BoardArray[x - i][y].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x - i, y);
+                                        }
+                                        else if (Ai_BoardArray[x - i][y].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x - i][y].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x - i, y);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (y + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x][y + i].HasPiece)
+                                        {
+                                            Ai_BoardArray[x][y + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x, y + i);
+                                        }
+                                        else if (Ai_BoardArray[x][y + i].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x][y + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x, y + i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (y - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x][y - i].HasPiece)
+                                        {
+                                            Ai_BoardArray[x][y - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x, y - i);
+                                        }
+                                        else if (Ai_BoardArray[x][y - i].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x][y - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x, y - i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                //diagonally
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x + i < 8 & y + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x + i][y + i].HasPiece)
+                                        {
+                                            Ai_BoardArray[x + i][y + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x + i, y + i);
+                                        }
+                                        else if (Ai_BoardArray[x + i][y + i].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x + i][y + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x + i, y + i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x - i >= 0 & y + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x - i][y + i].HasPiece)
+                                        {
+                                            Ai_BoardArray[x - i][y + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x - i, y + i);
+                                        }
+                                        else if (Ai_BoardArray[x - i][y + i].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x - i][y + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x - i, y + i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x + i < 8 & y - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x + i][y - i].HasPiece)
+                                        {
+                                            Ai_BoardArray[x + i][y - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x + i, y - i);
+                                        }
+                                        else if (Ai_BoardArray[x + i][y - i].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x + i][y - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x + i, y - i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x - i >= 0 & y - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x - i][y - i].HasPiece)
+                                        {
+                                            Ai_BoardArray[x - i][y - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x - i, y - i);
+                                        }
+                                        else if (Ai_BoardArray[x - i][y - i].TeamColour == enemy)
+                                        {
+                                            Ai_BoardArray[x - i][y - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                            checkscore(x - i, y - i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                break;
+                            case "King":
+                                //up/down
+                                if (x + 1 < 8)
+                                {
+                                    if (!Ai_BoardArray[x + 1][y].HasPiece)
+                                    {
+                                        Ai_BoardArray[x + 1][y].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x + 1, y);
+                                    }
+                                    else if (Ai_BoardArray[x + 1][y].TeamColour == enemy)
+                                    {
+                                        Ai_BoardArray[x + 1][y].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x + 1, y);
+
+                                    }
+                                }
+                                if (x - 1 >= 0)
+                                {
+                                    if (!Ai_BoardArray[x - 1][y].HasPiece)
+                                    {
+                                        Ai_BoardArray[x - 1][y].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x - 1, y);
+                                    }
+                                    else if (Ai_BoardArray[x - 1][y].TeamColour == enemy)
+                                    {
+                                        Ai_BoardArray[x - 1][y].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x - 1, y);
+
+                                    }
+
+                                }
+                                if (y + 1 < 8)
+                                {
+                                    if (!Ai_BoardArray[x][y + 1].HasPiece)
+                                    {
+                                        Ai_BoardArray[x][y + 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x, y + 1);
+                                    }
+                                    else if (Ai_BoardArray[x][y + 1].TeamColour == enemy)
+                                    {
+                                        Ai_BoardArray[x][y + 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x, y + 1);
+                                    }
+
+                                }
+                                if (y - 1 >= 0)
+                                {
+                                    if (!Ai_BoardArray[x][y - 1].HasPiece)
+                                    {
+                                        Ai_BoardArray[x][y - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x, y - 1);
+                                    }
+                                    else if (Ai_BoardArray[x][y - 1].TeamColour == enemy)
+                                    {
+                                        Ai_BoardArray[x][y - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x, y - 1);
+
+                                    }
+
+                                }
+                                //diagonally
+                                if (x - 1 >= 0 & y - 1 >= 0)
+                                {
+                                    if (!Ai_BoardArray[x - 1][y - 1].HasPiece)
+                                    {
+                                        Ai_BoardArray[x - 1][y - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x - 1, y - 1);
+                                    }
+                                    else if (Ai_BoardArray[x - 1][y - 1].TeamColour == enemy)
+                                    {
+                                        Ai_BoardArray[x - 1][y - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x - 1, y - 1);
+
+                                    }
+
+                                }
+                                if (x + 1 < 8 & y + 1 < 8)
+                                {
+                                    if (!Ai_BoardArray[x + 1][y + 1].HasPiece)
+                                    {
+                                        Ai_BoardArray[x + 1][y + 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x + 1, y + 1);
+                                    }
+                                    else if (Ai_BoardArray[x + 1][y + 1].TeamColour == enemy)
+                                    {
+                                        Ai_BoardArray[x + 1][y + 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x + 1, y + 1);
+
+                                    }
+
+                                }
+                                if (x - 1 >= 0 & y + 1 < 8)
+                                {
+                                    if (!Ai_BoardArray[x - 1][y + 1].HasPiece)
+                                    {
+                                        Ai_BoardArray[x - 1][y + 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x - 1, y + 1);
+                                    }
+                                    else if (Ai_BoardArray[x - 1][y + 1].TeamColour == enemy)
+                                    {
+                                        Ai_BoardArray[x - 1][y + 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x - 1, y + 1);
+
+                                    }
+
+                                }
+                                if (x + 1 < 8 & y - 1 >= 0)
+                                {
+                                    if (!Ai_BoardArray[x + 1][y - 1].HasPiece)
+                                    {
+                                        Ai_BoardArray[x + 1][y - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x + 1, y - 1);
+                                    }
+                                    else if (Ai_BoardArray[x + 1][y - 1].TeamColour == enemy)
+                                    {
+                                        Ai_BoardArray[x + 1][y - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        checkscore(x + 1, y - 1);
+
+                                    }
+
+                                }
+                                break;
+                        }
+
+
+                    }
+                }
+            }
+            endx = MaxScore[1];
+            endy = MaxScore[2];
+            stx = MaxScore[3];
+            sty = MaxScore[4];
+            MovePiece();
+            if (Turn == "White") { Turn = "Black"; } else { Turn = "White"; }
+
+            
+
+
+        }
+
+        private void Ai_MovePiece()
+        {
+
+            
+            if (Ai_BoardArray[endx][endy].TeamColour != Ai_BoardArray[stx][sty].TeamColour)
+            {
+                ChessPiece Piece = Ai_BoardArray[stx][sty];
+                Ai_BoardArray[endx][endy] = Piece;
+                Ai_BoardArray[stx][sty] = new ChessPiece();
+            }
+            else
+            {
+                ChessPiece Piece = Ai_BoardArray[stx][sty];
+                Ai_BoardArray[stx][sty] = Ai_BoardArray[endx][endy];
+                Ai_BoardArray[endx][endy] = Piece;
+            }
+        }
+
+        private void MovePiece()
+        {
+                        
             if(BoardArray[endx][endy].TeamColour != BoardArray[stx][sty].TeamColour)
             {
                 ChessPiece Piece = BoardArray[stx][sty];
@@ -185,7 +904,7 @@ namespace Test1
                             BoardArray[i][j].EnablePlayer(Turn,"");
                         }
                     }
-                    BoardArray[posx][posy].EnablePlayer(Turn);
+                    BoardArray[posx][posy].EnablePlayer(Turn, showmove: true);
                     switch (PieceType)
                     {
                         case "Pawn": //attack mode not implemented
@@ -193,14 +912,14 @@ namespace Test1
                             {
                                 if (posy + direction >= 0)
                                 {
-                                    BoardArray[posx][posy + direction].EnablePlayer(Turn);
+                                    BoardArray[posx][posy + direction].EnablePlayer("None", showmove: true);
                                     if(posx + 1 <8)
                                     {
-                                        BoardArray[posx + 1][posy + direction].EnablePlayer(enemy,Secondary: "");
+                                        BoardArray[posx + 1][posy + direction].EnablePlayer(enemy,Secondary: "", showmove: true);
                                     }
                                     if (posx - 1 >= 0)
                                     {
-                                        BoardArray[posx - 1][posy + direction].EnablePlayer(enemy, Secondary:"");
+                                        BoardArray[posx - 1][posy + direction].EnablePlayer(enemy, Secondary:"", showmove: true);
                                     }
                                 }
                             }
@@ -208,14 +927,14 @@ namespace Test1
                             {
                                 if (posy + direction < 8)
                                 {
-                                    BoardArray[posx][posy + direction].EnablePlayer(Turn);
+                                    BoardArray[posx][posy + direction].EnablePlayer("None", showmove: true);
                                     if (posx + 1 < 8)
                                     {
-                                        BoardArray[posx + 1][posy + direction].EnablePlayer(enemy, Secondary: "");
+                                        BoardArray[posx + 1][posy + direction].EnablePlayer(enemy, Secondary: "", showmove: true);
                                     }
                                     if (posx - 1 >= 0)
                                     {
-                                        BoardArray[posx - 1][posy + direction].EnablePlayer(enemy, Secondary: "");
+                                        BoardArray[posx - 1][posy + direction].EnablePlayer(enemy, Secondary: "", showmove: true);
                                     }
                                 }
                             }
@@ -224,36 +943,36 @@ namespace Test1
                         case "Knight":
                             if (posx - 1 >= 0 & posy - 2 >= 0)
                             {
-                                BoardArray[posx - 1][posy - 2].EnablePlayer(Turn, Enemy: enemy);
+                                BoardArray[posx - 1][posy - 2].EnablePlayer(enemy, Enemy: enemy, showmove: true);
                             }
                             if (posx + 1 < 8 & posy + 2 < 8)
                             {
-                                BoardArray[posx + 1][posy + 2].EnablePlayer(Turn, Enemy: enemy);
+                                BoardArray[posx + 1][posy + 2].EnablePlayer(enemy, Enemy: enemy, showmove: true);
                             }
                             if (posx + 1 < 8 & posy - 2 >= 0)
                             {
-                                BoardArray[posx + 1][posy - 2].EnablePlayer(Turn, Enemy: enemy);
+                                BoardArray[posx + 1][posy - 2].EnablePlayer(enemy, Enemy: enemy, showmove: true);
                             }
                             if (posx - 1 >= 0 & posy + 2 < 8)
                             {
-                                BoardArray[posx - 1][posy + 2].EnablePlayer(Turn, Enemy: enemy);
+                                BoardArray[posx - 1][posy + 2].EnablePlayer(enemy, Enemy: enemy, showmove: true);
                             }
 
                             if (posx - 2 >= 0 & posy - 1 >= 0)
                             {
-                                BoardArray[posx - 2][posy - 1].EnablePlayer(Turn, Enemy: enemy);
+                                BoardArray[posx - 2][posy - 1].EnablePlayer(enemy, Enemy: enemy, showmove: true);
                             }
                             if (posx + 2 < 8 & posy + 1 < 8)
                             {
-                                BoardArray[posx + 2][posy + 1].EnablePlayer(Turn, Enemy: enemy);
+                                BoardArray[posx + 2][posy + 1].EnablePlayer(enemy, Enemy: enemy, showmove: true);
                             }
                             if (posx + 2 < 8 & posy - 1 >= 0)
                             {
-                                BoardArray[posx + 2][posy - 1].EnablePlayer(Turn, Enemy: enemy);
+                                BoardArray[posx + 2][posy - 1].EnablePlayer(enemy, Enemy: enemy, showmove: true);
                             }
                             if (posx - 2 >= 0 & posy + 1 < 8)
                             {
-                                BoardArray[posx - 2][posy + 1].EnablePlayer(Turn, Enemy: enemy);
+                                BoardArray[posx - 2][posy + 1].EnablePlayer(enemy, Enemy: enemy, showmove: true);
                             }
                             break;
 
@@ -266,11 +985,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx + i][posy + i].HasPiece)
                                     {
-                                        BoardArray[posx + i][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx + i][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx + i][posy + i].TeamColour==enemy)
                                     {
-                                        BoardArray[posx + i][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx + i][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -283,11 +1002,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx - i][posy + i].HasPiece)
                                     {
-                                        BoardArray[posx - i][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx - i][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx - i][posy + i].TeamColour == enemy)
                                     {
-                                        BoardArray[posx - i][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx - i][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -301,11 +1020,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx + i][posy - i].HasPiece)
                                     {
-                                        BoardArray[posx + i][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx + i][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if(BoardArray[posx + i][posy - i].TeamColour == enemy)
                                     {
-                                        BoardArray[posx + i][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx + i][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -319,11 +1038,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx - i][posy - i].HasPiece)
                                     {
-                                        BoardArray[posx - i][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx - i][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if(BoardArray[posx - i][posy - i].TeamColour == enemy)
                                     {
-                                        BoardArray[posx - i][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx - i][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -340,11 +1059,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx + i][posy].HasPiece)
                                     {
-                                        BoardArray[posx + i][posy].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx + i][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx + i][posy].TeamColour == enemy)
                                     {
-                                        BoardArray[posx + i][posy].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx + i][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -357,11 +1076,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx - i][posy].HasPiece)
                                     {
-                                        BoardArray[posx - i][posy].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx - i][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx - i][posy].TeamColour == enemy)
                                     {
-                                        BoardArray[posx - i][posy].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx - i][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -374,11 +1093,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx][posy + i].HasPiece)
                                     {
-                                        BoardArray[posx][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx][posy + i].TeamColour == enemy)
                                     {
-                                        BoardArray[posx][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -391,11 +1110,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx][posy - i].HasPiece)
                                     {
-                                        BoardArray[posx][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx][posy - i].TeamColour == enemy)
                                     {
-                                        BoardArray[posx][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -412,11 +1131,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx + i][posy].HasPiece)
                                     {
-                                        BoardArray[posx + i][posy].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx + i][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx + i][posy].TeamColour == enemy)
                                     {
-                                        BoardArray[posx + i][posy].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx + i][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -429,11 +1148,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx - i][posy].HasPiece)
                                     {
-                                        BoardArray[posx - i][posy].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx - i][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx - i][posy].TeamColour == enemy)
                                     {
-                                        BoardArray[posx - i][posy].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx - i][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -446,11 +1165,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx][posy + i].HasPiece)
                                     {
-                                        BoardArray[posx][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx][posy + i].TeamColour == enemy)
                                     {
-                                        BoardArray[posx][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -463,11 +1182,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx][posy - i].HasPiece)
                                     {
-                                        BoardArray[posx][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx][posy - i].TeamColour == enemy)
                                     {
-                                        BoardArray[posx][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -481,11 +1200,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx + i][posy + i].HasPiece)
                                     {
-                                        BoardArray[posx + i][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx + i][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx + i][posy + i].TeamColour == enemy)
                                     {
-                                        BoardArray[posx + i][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx + i][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -498,11 +1217,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx - i][posy + i].HasPiece)
                                     {
-                                        BoardArray[posx - i][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx - i][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx - i][posy + i].TeamColour == enemy)
                                     {
-                                        BoardArray[posx - i][posy + i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx - i][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -516,11 +1235,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx + i][posy - i].HasPiece)
                                     {
-                                        BoardArray[posx + i][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx + i][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx + i][posy - i].TeamColour == enemy)
                                     {
-                                        BoardArray[posx + i][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx + i][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -534,11 +1253,11 @@ namespace Test1
                                 {
                                     if (!BoardArray[posx - i][posy - i].HasPiece)
                                     {
-                                        BoardArray[posx - i][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx - i][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
                                     else if (BoardArray[posx - i][posy - i].TeamColour == enemy)
                                     {
-                                        BoardArray[posx - i][posy - i].EnablePlayer(Turn, Enemy: enemy);
+                                        BoardArray[posx - i][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
@@ -551,11 +1270,11 @@ namespace Test1
                             {
                                 if (!BoardArray[posx + 1][posy].HasPiece)
                                 {
-                                    BoardArray[posx + 1][posy].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx + 1][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                 }
                                 else if (BoardArray[posx + 1][posy].TeamColour == enemy)
                                 {
-                                    BoardArray[posx + 1][posy].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx + 1][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     
                                 }
                             }
@@ -563,11 +1282,11 @@ namespace Test1
                             {
                                 if (!BoardArray[posx - 1][posy].HasPiece)
                                 {
-                                    BoardArray[posx - 1][posy].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx - 1][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                 }
                                 else if (BoardArray[posx - 1][posy].TeamColour == enemy)
                                 {
-                                    BoardArray[posx - 1][posy].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx - 1][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     
                                 }
                                 
@@ -576,11 +1295,11 @@ namespace Test1
                             {
                                 if (!BoardArray[posx][posy + 1].HasPiece)
                                 {
-                                    BoardArray[posx][posy + 1].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx][posy + 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                 }
                                 else if (BoardArray[posx][posy + 1].TeamColour == enemy)
                                 {
-                                    BoardArray[posx][posy + 1].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx][posy + 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
 
                                 }
 
@@ -589,11 +1308,11 @@ namespace Test1
                             {
                                 if (!BoardArray[posx][posy - 1].HasPiece)
                                 {
-                                    BoardArray[posx][posy - 1].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx][posy - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                 }
                                 else if (BoardArray[posx][posy - 1].TeamColour == enemy)
                                 {
-                                    BoardArray[posx][posy - 1].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx][posy - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
 
                                 }
 
@@ -603,11 +1322,11 @@ namespace Test1
                             {
                                 if (!BoardArray[posx - 1][posy - 1].HasPiece)
                                 {
-                                    BoardArray[posx - 1][posy - 1].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx - 1][posy - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                 }
                                 else if (BoardArray[posx - 1][posy - 1].TeamColour == enemy)
                                 {
-                                    BoardArray[posx - 1][posy - 1].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx - 1][posy - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     
                                 }
                                 
@@ -616,11 +1335,11 @@ namespace Test1
                             {
                                 if (!BoardArray[posx + 1][posy + 1].HasPiece)
                                 {
-                                    BoardArray[posx + 1][posy + 1].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx + 1][posy + 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                 }
                                 else if (BoardArray[posx + 1][posy + 1].TeamColour == enemy)
                                 {
-                                    BoardArray[posx + 1][posy + 1].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx + 1][posy + 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
 
                                 }
 
@@ -629,11 +1348,11 @@ namespace Test1
                             {
                                 if (!BoardArray[posx - 1][posy + 1].HasPiece)
                                 {
-                                    BoardArray[posx - 1][posy + 1].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx - 1][posy + 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                 }
                                 else if (BoardArray[posx - 1][posy + 1].TeamColour == enemy)
                                 {
-                                    BoardArray[posx - 1][posy + 1].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx - 1][posy + 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
 
                                 }
 
@@ -642,11 +1361,11 @@ namespace Test1
                             {
                                 if (!BoardArray[posx + 1][posy - 1].HasPiece)
                                 {
-                                    BoardArray[posx + 1][posy - 1].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx + 1][posy - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                 }
                                 else if (BoardArray[posx + 1][posy - 1].TeamColour == enemy)
                                 {
-                                    BoardArray[posx + 1][posy - 1].EnablePlayer(Turn, Enemy: enemy);
+                                    BoardArray[posx + 1][posy - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
 
                                 }
 
@@ -675,6 +1394,12 @@ namespace Test1
                 endy = posy;
                 MovePiece();
                 if(Turn =="White") { Turn = "Black"; } else { Turn = "White"; }
+
+                if (Ai_Enabled == true && Turn == "Black")
+                {
+                    Ai_Think();
+
+                }
                 RefreshTable(Turn);
 
             }

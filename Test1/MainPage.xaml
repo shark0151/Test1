@@ -9,7 +9,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Button x:Name="button" Content="Play"  HorizontalAlignment="Left" Margin="80,240,0,0" VerticalAlignment="Top" Height="60" Width="120" Click="button_Click"/>
+        <Button x:Name="button" Content="1 Player" FontSize="50" Margin="0,250,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Height="100" Width="320" Click="button_Click"/>
+        <Button x:Name="button2" Content="2 Players" FontSize="50" Margin="0,400,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Height="100" Width="320" Click="button2_Click"/>
 
     </Grid>
 </Page>

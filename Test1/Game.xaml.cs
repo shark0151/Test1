@@ -31,16 +31,37 @@ namespace Test1
         public static int stx = 0, sty = 0;
         public static int endx = 0, endy = 0;
         public static string Turn = "White";
+
         public static bool Selected = false;
-       
+        public static bool Check = false;
+        public static bool Ai_Enabled = false;
+        public static List<List<ChessPiece>> Ai_BoardArray = new List<List<ChessPiece>>();
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+
+        {
+
+            Ai_Enabled = (bool)e.Parameter;
+
+        }
+        //events for game over?
+
         public Game()
         {
+
             this.InitializeComponent();
             InitTable();
             SetTableAI();
             SetTablePlayer();
             EnablePlayer();
+            Gameupdate();
+
             
+            void Gameupdate()
+            {
+                GameStatus.Text = Turn + " Playing";
+            }
+
             void InitTable()
             {
                 Chessboard.Children.Add(PiecesGrid);
@@ -50,30 +71,30 @@ namespace Test1
                     for (int j = 0; j < 8; j++)
                     {
                         ChessPiece x = new ChessPiece();
-                        x.SetLocation(new Thickness(80 * i, 80 * j, 0, 0),i,j);
+                        x.SetLocation(new Thickness(80 * i, 80 * j, 0, 0), i, j);
                         BoardArray[i].Add(x);
                         BoardArray[i][j].SetPieceType(PieceTypes[6]);
                         PiecesGrid.Children.Add(BoardArray[i][j].GetSquare());
                     }
                 }
             }
- 
+
             void SetTableAI()
             {
                 for (int i = 0; i < 8; i++)
                 {
                     for (int j = 0; j < 2; j++)
                     {
-                        
+
                         if (j == 0)
                         {
-                            BoardArray[i][j].SetPieceTeam("Black");                            
+                            BoardArray[i][j].SetPieceTeam("Black");
                             if (i == 0 || i == 7) { BoardArray[i][j].SetPieceType(PieceTypes[3]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_rook.png"))); BoardArray[i][j].SetHasPiece(true); }
                             else if (i == 1 || i == 6) { BoardArray[i][j].SetPieceType(PieceTypes[1]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_knight.png"))); BoardArray[i][j].SetHasPiece(true); }
                             else if (i == 2 || i == 5) { BoardArray[i][j].SetPieceType(PieceTypes[2]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_bishop.png"))); BoardArray[i][j].SetHasPiece(true); }
                             else if (i == 3) { BoardArray[i][j].SetPieceType(PieceTypes[4]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_queen.png"))); BoardArray[i][j].SetHasPiece(true); }
                             else if (i == 4) { BoardArray[i][j].SetPieceType(PieceTypes[5]); BoardArray[i][j].SetImage(new BitmapImage(new Uri("ms-appx:///Assets/pieces/b_king.png"))); BoardArray[i][j].SetHasPiece(true); }
-                           
+
                         }
                         else if (j == 1)
                         {
@@ -122,7 +143,7 @@ namespace Test1
                 {
                     for (int j = 0; j < 8; j++)
                     {
-                            BoardArray[i][j].EnablePlayer(Turn,"");
+                        BoardArray[i][j].EnablePlayer(Turn, "");
                     }
                 }
             }
