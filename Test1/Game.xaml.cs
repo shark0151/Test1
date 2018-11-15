@@ -35,6 +35,7 @@ namespace Test1
         public static bool Selected = false;
         public static bool Check = false;
         public static bool Ai_Enabled = false;
+        public static int Ai_Level = 3;
         public static List<List<ChessPiece>> Ai_BoardArray = new List<List<ChessPiece>>();
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -44,7 +45,8 @@ namespace Test1
             Ai_Enabled = (bool)e.Parameter;
 
         }
-        //events for game over?
+        //events for game over
+        //stretchy ui
 
         public Game()
         {
