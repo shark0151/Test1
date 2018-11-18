@@ -32,11 +32,15 @@ namespace Test1
         public static int endx = 0, endy = 0;
         public static string Turn = "White";
 
+        public string Update = "";
         public static bool Selected = false;
         public static bool Check = false;
         public static bool Ai_Enabled = false;
         public static int Ai_Level = 3;
-        public static List<List<ChessPiece>> Ai_BoardArray = new List<List<ChessPiece>>();
+        public static List<int> BMove;
+
+
+
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
 
@@ -46,7 +50,7 @@ namespace Test1
 
         }
         //events for game over
-        //stretchy ui
+        //special moves
 
         public Game()
         {
@@ -56,13 +60,10 @@ namespace Test1
             SetTableAI();
             SetTablePlayer();
             EnablePlayer();
-            Gameupdate();
 
             
-            void Gameupdate()
-            {
-                GameStatus.Text = Turn + " Playing";
-            }
+
+
 
             void InitTable()
             {
@@ -150,8 +151,701 @@ namespace Test1
                 }
             }
 
+
         }
-        
+
+        public static int minmax(List<List<ChessPiece>> Ai_BoardArray, string Play_as, int depth, int Score_W, int Score_B)
+        {
+            string enemy = "";
+            List<List<ChessPiece>> Copy_BoardArray = new List<List<ChessPiece>>();
+            for (int i = 0; i < 8; i++)
+            {
+                Copy_BoardArray.Add(new List<ChessPiece>());
+                for (int j = 0; j < 8; j++)
+                {
+                    ChessPiece x = BoardArray[i][j];
+                    Copy_BoardArray[i].Add(x);
+                }
+            }
+            //int TempScore = -999;
+            List<int> Move = new List<int> { 0, 0, 0, 0 };
+            void undo()
+            {
+                Ai_BoardArray = Copy_BoardArray;
+            }
+            if (Play_as == "White") { enemy = "Black"; } else { enemy = "White"; }
+            int checkscore(int x, int y)
+            {
+                int Score = 0;
+                if (Ai_BoardArray[x][y].TeamColour != Play_as)
+                {
+                    switch (Ai_BoardArray[x][y].PieceType)
+                    {
+                        case "None":
+                            Score = 0;
+                            break;
+                        case "Pawn":
+                            Score = 10;
+                            break;
+                        case "Knight":
+                            Score = 20;
+                            break;
+                        case "Bishop":
+                            Score = 30;
+                            break;
+                        case "Rook":
+                            Score = 40;
+                            break;
+                        case "Queen":
+                            Score = 50;
+                            break;
+                        case "King":
+                            Score = 100;
+                            break;
+                    }
+
+                }
+
+                else
+                {
+                    switch (Ai_BoardArray[x][y].PieceType)
+                    {
+
+                        case "Pawn":
+                            Score = -10;
+                            break;
+                        case "Knight":
+                            Score = -20;
+                            break;
+                        case "Bishop":
+                            Score = -30;
+                            break;
+                        case "Rook":
+                            Score = -40;
+                            break;
+                        case "Queen":
+                            Score = -50;
+                            break;
+                        case "King":
+                            Score = -100;
+                            break;
+                    }
+
+                }
+
+                return Score;
+            }
+
+            List<List<ChessPiece>> virtual_MovePiece(List<List<ChessPiece>> virtual_BoardArrayx, List<int> Moveit)
+            {
+                
+                int astx, asty, aendx, aendy;
+                astx = Moveit[0];
+                asty = Moveit[1];
+                aendx = Moveit[2];
+                aendy = Moveit[3];
+
+                if (virtual_BoardArrayx[aendx][aendy].TeamColour != virtual_BoardArrayx[astx][asty].TeamColour)
+                {
+                    ChessPiece Piece = virtual_BoardArrayx[astx][asty];
+                    virtual_BoardArrayx[aendx][aendy] = Piece;
+                    virtual_BoardArrayx[astx][asty] = new ChessPiece();
+                }
+                else
+                {
+                    ChessPiece Piece = virtual_BoardArrayx[astx][asty];
+                    virtual_BoardArrayx[astx][asty] = virtual_BoardArrayx[aendx][aendy];
+                    virtual_BoardArrayx[aendx][aendy] = Piece;
+                }
+                return virtual_BoardArrayx;
+            }
+
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+
+                    if (Ai_BoardArray[x][y].TeamColour == Play_as)
+                    {
+                        switch (Ai_BoardArray[x][y].PieceType)
+                        {
+                            case "Pawn":
+                                if (Play_as == "Black")
+                                {
+                                    if (y + 1 < 8)
+                                    {
+                                        if (Ai_BoardArray[x][y + 1].HasPiece == false)
+                                        {
+                                            if (depth > 0)
+                                            {
+                                                if (checkscore(x, y + 1) >= Score_B)
+                                                {
+                                                    Move = new List<int> { x, y, x, y + 1 };
+                                                    Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1, Score_W, Score_B);
+                                                    
+                                                }
+                                            }
+                                            else
+                                            {
+                                                
+                                                return checkscore(x, y + 1);
+                                            }
+                                        }
+                                        if (x + 1 < 8)
+                                        {
+                                            if (Ai_BoardArray[x + 1][y + 1].HasPiece == true)
+                                            {
+                                                if (depth > 0)
+                                                {
+                                                    if (checkscore(x + 1, y + 1) >= Score_B)
+                                                    {
+                                                        Move = new List<int> { x, y, x + 1, y + 1 };
+                                                        Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1, Score_W, Score_B);
+                                                        
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    
+                                                    return checkscore(x + 1, y + 1);
+                                                }
+
+                                            }
+                                        }
+                                        if (x - 1 >= 0)
+                                        {
+                                            if (Ai_BoardArray[x - 1][y + 1].HasPiece == true)
+                                            {
+                                                if (depth > 0)
+                                                {
+                                                    if (checkscore(x - 1, y + 1) >= Score_B)
+                                                    {
+                                                        Move = new List<int> { x, y, x - 1, y + 1 };
+                                                        Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1, Score_W, Score_B);
+                                                       
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    
+                                                    return checkscore(x - 1, y + 1);
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (y - 1 >= 0)
+                                    {
+                                        if (Ai_BoardArray[x][y - 1].HasPiece == false)
+                                        {
+                                            if (depth > 0)
+                                            {
+                                                if (checkscore(x, y - 1) >= Score_W)
+                                                {
+                                                    Move = new List<int> { x, y, x, y - 1 };
+                                                    Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1, Score_W, Score_B);
+                                                   
+                                                }
+                                            }
+                                            else
+                                            {
+                                               
+                                                return checkscore(x, y - 1);
+                                            }
+                                        }
+
+                                        if (x + 1 < 8)
+                                        {
+                                            if (Ai_BoardArray[x + 1][y - 1].HasPiece == true)
+                                            {
+                                                if (depth > 0)
+                                                {
+                                                    if (checkscore(x + 1, y - 1) >= Score_W)
+                                                    {
+                                                        Move = new List<int> { x, y, x + 1, y - 1 };
+                                                        Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1, Score_W, Score_B);
+                                                        
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    
+                                                    return checkscore(x + 1, y - 1);
+                                                }
+                                            }
+                                        }
+                                        if (x - 1 >= 0)
+                                        {
+                                            if (Ai_BoardArray[x - 1][y - 1].HasPiece == true)
+                                            {
+                                                if (depth > 0)
+                                                {
+                                                    if (checkscore(x - 1, y - 1) >= Score_W)
+                                                    {
+                                                        Move = new List<int> { x, y, x - 1, y - 1 };
+                                                        Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1, Score_W, Score_B);
+                                                        
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    
+                                                    return checkscore(x - 1, y - 1);
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+                                break;
+
+                            case "Knight":
+                                if (x - 1 >= 0 & y - 2 >= 0)
+                                {
+                                    checkscore(x - 1, y - 2);
+                                }
+                                if (x + 1 < 8 & y + 2 < 8)
+                                {
+                                    checkscore(x + 1, y + 2);
+                                }
+                                if (x + 1 < 8 & y - 2 >= 0)
+                                {
+                                    checkscore(x + 1, y - 2);
+                                }
+                                if (x - 1 >= 0 & y + 2 < 8)
+                                {
+                                    checkscore(x - 1, y + 2);
+                                }
+
+                                if (x - 2 >= 0 & y - 1 >= 0)
+                                {
+                                    checkscore(x - 2, y - 1);
+                                }
+                                if (x + 2 < 8 & y + 1 < 8)
+                                {
+                                    checkscore(x + 2, y + 1);
+                                }
+                                if (x + 2 < 8 & y - 1 >= 0)
+                                {
+                                    checkscore(x + 2, y - 1);
+                                }
+                                if (x - 2 >= 0 & y + 1 < 8)
+                                {
+                                    checkscore(x - 2, y + 1);
+                                }
+                                break;
+
+                            case "Bishop":
+
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x + i < 8 & y + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x + i][y + i].HasPiece)
+                                        {
+                                            checkscore(x + i, y + 1);
+                                        }
+                                        else if (Ai_BoardArray[x + i][y + i].TeamColour == enemy)
+                                        {
+                                            checkscore(x + i, y + i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x - i >= 0 & y + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x - i][y + i].HasPiece)
+                                        {
+                                            checkscore(x - i, y + i);
+                                        }
+                                        else if (Ai_BoardArray[x - i][y + i].TeamColour == enemy)
+                                        {
+                                            checkscore(x - i, y + i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x + i < 8 & y - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x + i][y - i].HasPiece)
+                                        {
+                                            checkscore(x + i, y - i);
+                                        }
+                                        else if (Ai_BoardArray[x + i][y - i].TeamColour == enemy)
+                                        {
+                                            checkscore(x + i, y - i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x - i >= 0 & y - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x - i][y - i].HasPiece)
+                                        {
+                                            checkscore(x - i, y - i);
+                                        }
+                                        else if (Ai_BoardArray[x - i][y - i].TeamColour == enemy)
+                                        {
+                                            checkscore(x - i, y - i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                break;
+
+                            case "Rook":
+
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x + i][y].HasPiece)
+                                        {
+                                            checkscore(x + i, y);
+                                        }
+                                        else if (Ai_BoardArray[x + i][y].TeamColour == enemy)
+                                        {
+                                            checkscore(x + i, y);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x - i][y].HasPiece)
+                                        {
+                                            checkscore(x - i, y);
+                                        }
+                                        else if (Ai_BoardArray[x - i][y].TeamColour == enemy)
+                                        {
+                                            checkscore(x - i, y);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (y + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x][y + i].HasPiece)
+                                        {
+                                            checkscore(x, y + i);
+                                        }
+                                        else if (Ai_BoardArray[x][y + i].TeamColour == enemy)
+                                        {
+                                            checkscore(x, y + i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (y - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x][y - i].HasPiece)
+                                        {
+                                            checkscore(x, y - i);
+                                        }
+                                        else if (Ai_BoardArray[x][y - i].TeamColour == enemy)
+                                        {
+                                            checkscore(x, y - i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                break;
+
+                            case "Queen":
+                                // up,down
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x + i][y].HasPiece)
+                                        {
+                                            checkscore(x + i, y);
+                                        }
+                                        else if (Ai_BoardArray[x + i][y].TeamColour == enemy)
+                                        {
+                                            checkscore(x + i, y);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x - i][y].HasPiece)
+                                        {
+                                            checkscore(x - i, y);
+                                        }
+                                        else if (Ai_BoardArray[x - i][y].TeamColour == enemy)
+                                        {
+                                            checkscore(x - i, y);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (y + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x][y + i].HasPiece)
+                                        {
+                                            checkscore(x, y + i);
+                                        }
+                                        else if (Ai_BoardArray[x][y + i].TeamColour == enemy)
+                                        {
+                                            checkscore(x, y + i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (y - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x][y - i].HasPiece)
+                                        {
+                                            checkscore(x, y - i);
+                                        }
+                                        else if (Ai_BoardArray[x][y - i].TeamColour == enemy)
+                                        {
+                                            checkscore(x, y - i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                //diagonally
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x + i < 8 & y + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x + i][y + i].HasPiece)
+                                        {
+                                            checkscore(x + i, y + i);
+                                        }
+                                        else if (Ai_BoardArray[x + i][y + i].TeamColour == enemy)
+                                        {
+                                            checkscore(x + i, y + i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x - i >= 0 & y + i < 8)
+                                    {
+                                        if (!Ai_BoardArray[x - i][y + i].HasPiece)
+                                        {
+                                            checkscore(x - i, y + i);
+                                        }
+                                        else if (Ai_BoardArray[x - i][y + i].TeamColour == enemy)
+                                        {
+                                            checkscore(x - i, y + i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x + i < 8 & y - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x + i][y - i].HasPiece)
+                                        {
+                                            checkscore(x + i, y - i);
+                                        }
+                                        else if (Ai_BoardArray[x + i][y - i].TeamColour == enemy)
+                                        {
+                                            checkscore(x + i, y - i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+
+                                }
+                                for (int i = 1; i < 8; i++)
+                                {
+
+                                    if (x - i >= 0 & y - i >= 0)
+                                    {
+                                        if (!Ai_BoardArray[x - i][y - i].HasPiece)
+                                        {
+                                            checkscore(x - i, y - i);
+                                        }
+                                        else if (Ai_BoardArray[x - i][y - i].TeamColour == enemy)
+                                        {
+                                            checkscore(x - i, y - i);
+                                            break;
+                                        }
+                                        else break;
+                                    }
+                                }
+                                break;
+                            case "King":
+                                //up/down
+                                if (x + 1 < 8)
+                                {
+                                    if (!Ai_BoardArray[x + 1][y].HasPiece)
+                                    {
+                                        checkscore(x + 1, y);
+                                    }
+                                    else if (Ai_BoardArray[x + 1][y].TeamColour == enemy)
+                                    {
+                                        checkscore(x + 1, y);
+
+                                    }
+                                }
+                                if (x - 1 >= 0)
+                                {
+                                    if (!Ai_BoardArray[x - 1][y].HasPiece)
+                                    {
+                                        checkscore(x - 1, y);
+                                    }
+                                    else if (Ai_BoardArray[x - 1][y].TeamColour == enemy)
+                                    {
+                                        checkscore(x - 1, y);
+
+                                    }
+
+                                }
+                                if (y + 1 < 8)
+                                {
+                                    if (!Ai_BoardArray[x][y + 1].HasPiece)
+                                    {
+                                        checkscore(x, y + 1);
+                                    }
+                                    else if (Ai_BoardArray[x][y + 1].TeamColour == enemy)
+                                    {
+                                        checkscore(x, y + 1);
+                                    }
+
+                                }
+                                if (y - 1 >= 0)
+                                {
+                                    if (!Ai_BoardArray[x][y - 1].HasPiece)
+                                    {
+                                        checkscore(x, y - 1);
+                                    }
+                                    else if (Ai_BoardArray[x][y - 1].TeamColour == enemy)
+                                    {
+                                        checkscore(x, y - 1);
+
+                                    }
+
+                                }
+                                //diagonally
+                                if (x - 1 >= 0 & y - 1 >= 0)
+                                {
+                                    if (!Ai_BoardArray[x - 1][y - 1].HasPiece)
+                                    {
+                                        checkscore(x - 1, y - 1);
+                                    }
+                                    else if (Ai_BoardArray[x - 1][y - 1].TeamColour == enemy)
+                                    {
+                                        checkscore(x - 1, y - 1);
+
+                                    }
+
+                                }
+                                if (x + 1 < 8 & y + 1 < 8)
+                                {
+                                    if (!Ai_BoardArray[x + 1][y + 1].HasPiece)
+                                    {
+                                        checkscore(x + 1, y + 1);
+                                    }
+                                    else if (Ai_BoardArray[x + 1][y + 1].TeamColour == enemy)
+                                    {
+                                        checkscore(x + 1, y + 1);
+
+                                    }
+
+                                }
+                                if (x - 1 >= 0 & y + 1 < 8)
+                                {
+                                    if (!Ai_BoardArray[x - 1][y + 1].HasPiece)
+                                    {
+                                        checkscore(x - 1, y + 1);
+                                    }
+                                    else if (Ai_BoardArray[x - 1][y + 1].TeamColour == enemy)
+                                    {
+                                        checkscore(x - 1, y + 1);
+
+                                    }
+
+                                }
+                                if (x + 1 < 8 & y - 1 >= 0)
+                                {
+                                    if (!Ai_BoardArray[x + 1][y - 1].HasPiece)
+                                    {
+                                        checkscore(x + 1, y - 1);
+                                    }
+                                    else if (Ai_BoardArray[x + 1][y - 1].TeamColour == enemy)
+                                    {
+                                        checkscore(x + 1, y - 1);
+
+                                    }
+
+                                }
+                                break;
+                        }
+
+
+                    }
+                }
+            }
+
+            if (depth == 4)
+            {
+                BMove = Move;
+
+            }
+            return Score_B;
+        }
     }
 
 }
