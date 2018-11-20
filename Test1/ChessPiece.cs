@@ -686,7 +686,7 @@ namespace Test1
         private void Ai_Think()
         {
             List<List<ChessPiece>> Copy_BoardArray = new List<List<ChessPiece>>();
-            for(int i=0;i<8;i++)
+            for (int i = 0; i < 8; i++)
             {
                 Copy_BoardArray.Add(new List<ChessPiece>());
                 for (int j = 0; j < 8; j++)
@@ -695,16 +695,16 @@ namespace Test1
                     Copy_BoardArray[i].Add(x);
                 }
             }
-            
-            Game.minmax(Copy_BoardArray, "Black", 4, -999, -999);
 
-            //BoardArray = Copy_BoardArray.ToList();
+            Game.minmax(Copy_BoardArray, "Black", Ai_Level, 0, 0);
+
+
             stx = BMove[0];
             sty = BMove[1];
             endx = BMove[2];
             endy = BMove[3];
             if (Turn == "White") { Turn = "Black"; } else { Turn = "White"; }
-           MovePiece();
+            MovePiece();
 
 
         }
