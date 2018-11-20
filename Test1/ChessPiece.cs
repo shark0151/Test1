@@ -696,7 +696,7 @@ namespace Test1
                 }
             }
 
-            Game.minmax(Copy_BoardArray, "Black", Ai_Level, 0, 0);
+            Game.minmax(Copy_BoardArray, "Black", Ai_Level);
 
 
             stx = BMove[0];
@@ -1236,7 +1236,7 @@ namespace Test1
                 endy = posy;
                 MovePiece();
                 if(Turn =="White") { Turn = "Black"; } else { Turn = "White"; }
-
+                RefreshTable();
                 if (Ai_Enabled == true && Turn == "Black")
                 {
                     Ai_Think();
