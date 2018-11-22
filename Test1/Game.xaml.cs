@@ -157,23 +157,22 @@ namespace Test1
 
         public static int minmax(List<List<ChessPiece>> Ai_BoardArray, string Play_as, int depth)
         {
-            //fix undo
+            
             //black still unaware of white
             //maybe reduce arraycopy to only necessary info 
-            void undo(List<List<ChessPiece>> virtual_BoardArrayx, ChessPiece Piece, List<int> move)
+            void undo(List<List<ChessPiece>> virtual_BoardArrayx, ChessPiece Piece, ChessPiece Piece2, List<int> move)
             {
-                //something's wrong with it
-                /*
+                
                 int astx, asty, aendx, aendy;
-                astx = move[2];
-                asty = move[3];
-                aendx = move[0];
-                aendy = move[1];
+                astx = move[0];
+                asty = move[1];
+                aendx = move[2];
+                aendy = move[3];
 
 
-                virtual_BoardArrayx[astx][asty] = virtual_BoardArrayx[aendx][aendy];
+                virtual_BoardArrayx[astx][asty] = Piece2;
                 virtual_BoardArrayx[aendx][aendy] = Piece;
-                */
+                
             }
 
             List<int> Move = new List<int> { 0, 0, 0, 0 };
@@ -219,7 +218,7 @@ namespace Test1
                 return Score;
             }
 
-            List<List<ChessPiece>> virtual_MovePiece(List<List<ChessPiece>> Copy_BoardArray, List<int> Moveit)
+            List<List<ChessPiece>> virtual_MovePiece(List<List<ChessPiece>> virtual_BoardArrayx, List<int> Moveit)
             {
                 
                 int astx, asty, aendx, aendy;
@@ -228,7 +227,8 @@ namespace Test1
                 aendx = Moveit[2];
                 aendy = Moveit[3];
 
-                //kind of works but slow
+                //works but slow
+                /*
                 List<List<ChessPiece>> virtual_BoardArrayx = new List<List<ChessPiece>>();
                 for (int i = 0; i < 8; i++)
                 {
@@ -239,6 +239,7 @@ namespace Test1
                         virtual_BoardArrayx[i].Add(x);
                     }
                 }
+                */
                 
 
                 if (virtual_BoardArrayx[aendx][aendy].TeamColour != virtual_BoardArrayx[astx][asty].TeamColour)
@@ -286,6 +287,8 @@ namespace Test1
                                                     {
                                                         ChessPiece bkup = new ChessPiece();
                                                         bkup = Ai_BoardArray[Move[2]][Move[3]];
+                                                        ChessPiece bkup1 = new ChessPiece();
+                                                        bkup1 = Ai_BoardArray[Move[0]][Move[1]];
 
                                                         Score_B = checkscore(Move[2], Move[3]);
                                                         Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
@@ -293,7 +296,7 @@ namespace Test1
                                                         {
                                                             BMove = Move;
                                                         }
-                                                        undo(Ai_BoardArray, bkup, Move);
+                                                        undo(Ai_BoardArray, bkup, bkup1, Move);
                                                     }
 
                                                 }
@@ -309,6 +312,8 @@ namespace Test1
                                                             {
                                                                 ChessPiece bkup = new ChessPiece();
                                                                 bkup = Ai_BoardArray[Move[2]][Move[3]];
+                                                                ChessPiece bkup1 = new ChessPiece();
+                                                                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
 
                                                                 Score_B = checkscore(Move[2], Move[3]);
                                                                 Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
@@ -316,7 +321,7 @@ namespace Test1
                                                                 {
                                                                     BMove = Move;
                                                                 }
-                                                                undo(Ai_BoardArray, bkup, Move);
+                                                                undo(Ai_BoardArray, bkup, bkup1, Move);
                                                             }
 
 
@@ -336,6 +341,8 @@ namespace Test1
                                                             {
                                                                 ChessPiece bkup = new ChessPiece();
                                                                 bkup = Ai_BoardArray[Move[2]][Move[3]];
+                                                                ChessPiece bkup1 = new ChessPiece();
+                                                                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
 
                                                                 Score_B = checkscore(Move[2], Move[3]);
                                                                 Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
@@ -343,7 +350,7 @@ namespace Test1
                                                                 {
                                                                     BMove = Move;
                                                                 }
-                                                                undo(Ai_BoardArray, bkup, Move);
+                                                                undo(Ai_BoardArray, bkup, bkup1, Move);
                                                             }
 
 
@@ -369,10 +376,12 @@ namespace Test1
                                                     {
                                                         ChessPiece bkup = new ChessPiece();
                                                         bkup = Ai_BoardArray[Move[2]][Move[3]];
+                                                        ChessPiece bkup1 = new ChessPiece();
+                                                        bkup1 = Ai_BoardArray[Move[0]][Move[1]];
 
                                                         Score_W = checkscore(Move[2], Move[3]);
                                                         Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
-                                                        undo(Ai_BoardArray, bkup, Move);
+                                                        undo(Ai_BoardArray, bkup, bkup1, Move);
                                                     }
 
                                                 }
@@ -388,10 +397,12 @@ namespace Test1
                                                             {
                                                                 ChessPiece bkup = new ChessPiece();
                                                                 bkup = Ai_BoardArray[Move[2]][Move[3]];
+                                                                ChessPiece bkup1 = new ChessPiece();
+                                                                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
 
                                                                 Score_W = checkscore(Move[2], Move[3]);
                                                                 Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
-                                                                undo(Ai_BoardArray, bkup, Move);
+                                                                undo(Ai_BoardArray, bkup, bkup1, Move);
                                                             }
                                                         }
                                                     }
@@ -407,10 +418,12 @@ namespace Test1
                                                             {
                                                                 ChessPiece bkup = new ChessPiece();
                                                                 bkup = Ai_BoardArray[Move[2]][Move[3]];
+                                                                ChessPiece bkup1 = new ChessPiece();
+                                                                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
 
                                                                 Score_W = checkscore(Move[2], Move[3]);
                                                                 Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
-                                                                undo(Ai_BoardArray, bkup, Move);
+                                                                undo(Ai_BoardArray, bkup, bkup1, Move);
                                                             }
                                                         }
                                                     }
@@ -437,22 +450,26 @@ namespace Test1
 
                                                     ChessPiece bkup = new ChessPiece();
                                                     bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                    
+                                                    ChessPiece bkup1 = new ChessPiece();
+                                                    bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                     Score_B = checkscore(Move[2], Move[3]);
                                                     Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
                                                     BMove = Move;
-                                                    undo(Ai_BoardArray, bkup, Move);
+                                                    undo(Ai_BoardArray, bkup, bkup1, Move);
                                                 }
                                             }
                                             else if (checkscore(Move[2], Move[3]) >= Score_W & Ai_BoardArray[Move[2]][Move[3]].TeamColour != Play_as)
                                             {
                                                 ChessPiece bkup = new ChessPiece();
                                                 bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                
+                                                ChessPiece bkup1 = new ChessPiece();
+                                                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                 Score_W = checkscore(Move[2], Move[3]);
                                                 Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
 
-                                                undo(Ai_BoardArray, bkup, Move);
+                                                undo(Ai_BoardArray, bkup, bkup1, Move);
                                             }
                                         }
                                         else
@@ -476,21 +493,25 @@ namespace Test1
                                                 {
                                                     ChessPiece bkup = new ChessPiece();
                                                     bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                    
+                                                    ChessPiece bkup1 = new ChessPiece();
+                                                    bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                     Score_B = checkscore(Move[2], Move[3]);
                                                     Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
                                                     BMove = Move;
-                                                    undo(Ai_BoardArray, bkup, Move);
+                                                    undo(Ai_BoardArray, bkup, bkup1, Move);
                                                 }
                                             }
                                             else if (checkscore(Move[2], Move[3]) >= Score_W & Ai_BoardArray[Move[2]][Move[3]].TeamColour != Play_as)
                                             {
                                                 ChessPiece bkup = new ChessPiece();
                                                 bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                
+                                                ChessPiece bkup1 = new ChessPiece();
+                                                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                 Score_W = checkscore(Move[2], Move[3]);
                                                 Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
-                                                undo(Ai_BoardArray, bkup, Move);
+                                                undo(Ai_BoardArray, bkup, bkup1, Move);
 
                                             }
                                         }
@@ -513,21 +534,25 @@ namespace Test1
                                                 {
                                                     ChessPiece bkup = new ChessPiece();
                                                     bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                    
+                                                    ChessPiece bkup1 = new ChessPiece();
+                                                    bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                     Score_B = checkscore(Move[2], Move[3]);
                                                     Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
                                                     BMove = Move;
-                                                    undo(Ai_BoardArray, bkup, Move);
+                                                    undo(Ai_BoardArray, bkup, bkup1, Move);
                                                 }
                                             }
                                             else if (checkscore(Move[2], Move[3]) >= Score_W & Ai_BoardArray[Move[2]][Move[3]].TeamColour != Play_as)
                                             {
                                                 ChessPiece bkup = new ChessPiece();
                                                 bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                
+                                                ChessPiece bkup1 = new ChessPiece();
+                                                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                 Score_W = checkscore(Move[2], Move[3]);
                                                 Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
-                                                undo(Ai_BoardArray, bkup, Move);
+                                                undo(Ai_BoardArray, bkup, bkup1, Move);
                                             }
                                         }
                                         else
@@ -549,21 +574,25 @@ namespace Test1
                                                 {
                                                     ChessPiece bkup = new ChessPiece();
                                                     bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                    
+                                                    ChessPiece bkup1 = new ChessPiece();
+                                                    bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                     Score_B = checkscore(Move[2], Move[3]);
                                                     Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
                                                     BMove = Move;
-                                                    undo(Ai_BoardArray, bkup, Move);
+                                                    undo(Ai_BoardArray, bkup, bkup1, Move);
                                                 }
                                             }
                                             else if (checkscore(Move[2], Move[3]) >= Score_W & Ai_BoardArray[Move[2]][Move[3]].TeamColour != Play_as)
                                             {
                                                 ChessPiece bkup = new ChessPiece();
                                                 bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                
+                                                ChessPiece bkup1 = new ChessPiece();
+                                                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                 Score_W = checkscore(Move[2], Move[3]);
                                                 Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
-                                                undo(Ai_BoardArray, bkup, Move);
+                                                undo(Ai_BoardArray, bkup, bkup1, Move);
                                             }
                                         }
                                         else
@@ -586,21 +615,25 @@ namespace Test1
                                                 {
                                                     ChessPiece bkup = new ChessPiece();
                                                     bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                    
+                                                    ChessPiece bkup1 = new ChessPiece();
+                                                    bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                     Score_B = checkscore(Move[2], Move[3]);
                                                     Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
                                                     BMove = Move;
-                                                    undo(Ai_BoardArray, bkup, Move);
+                                                    undo(Ai_BoardArray, bkup, bkup1, Move);
                                                 }
                                             }
                                             else if (checkscore(Move[2], Move[3]) >= Score_W & Ai_BoardArray[Move[2]][Move[3]].TeamColour != Play_as)
                                             {
                                                 ChessPiece bkup = new ChessPiece();
                                                 bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                
+                                                ChessPiece bkup1 = new ChessPiece();
+                                                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                 Score_W = checkscore(Move[2], Move[3]);
                                                 Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
-                                                undo(Ai_BoardArray, bkup, Move);
+                                                undo(Ai_BoardArray, bkup, bkup1, Move);
                                             }
                                         }
                                         else
@@ -622,21 +655,25 @@ namespace Test1
                                                 {
                                                     ChessPiece bkup = new ChessPiece();
                                                     bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                    
+                                                    ChessPiece bkup1 = new ChessPiece();
+                                                    bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                     Score_B = checkscore(Move[2], Move[3]);
                                                     Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
                                                     BMove = Move;
-                                                    undo(Ai_BoardArray, bkup, Move);
+                                                    undo(Ai_BoardArray, bkup, bkup1, Move);
                                                 }
                                             }
                                             else if (checkscore(Move[2], Move[3]) >= Score_W & Ai_BoardArray[Move[2]][Move[3]].TeamColour != Play_as)
                                             {
                                                 ChessPiece bkup = new ChessPiece();
                                                 bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                
+                                                ChessPiece bkup1 = new ChessPiece();
+                                                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                 Score_W = checkscore(Move[2], Move[3]);
                                                 Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
-                                                undo(Ai_BoardArray, bkup, Move);
+                                                undo(Ai_BoardArray, bkup, bkup1, Move);
                                             }
                                         }
                                         else
@@ -658,21 +695,25 @@ namespace Test1
                                                 {
                                                     ChessPiece bkup = new ChessPiece();
                                                     bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                    
+                                                    ChessPiece bkup1 = new ChessPiece();
+                                                    bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                     Score_B = checkscore(Move[2], Move[3]);
                                                     Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
                                                     BMove = Move;
-                                                    undo(Ai_BoardArray, bkup, Move);
+                                                    undo(Ai_BoardArray, bkup, bkup1, Move);
                                                 }
                                             }
                                             else if (checkscore(Move[2], Move[3]) >= Score_W & Ai_BoardArray[Move[2]][Move[3]].TeamColour != Play_as)
                                             {
                                                 ChessPiece bkup = new ChessPiece();
                                                 bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                
+                                                ChessPiece bkup1 = new ChessPiece();
+                                                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                 Score_W = checkscore(Move[2], Move[3]);
                                                 Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
-                                                undo(Ai_BoardArray, bkup, Move);
+                                                undo(Ai_BoardArray, bkup, bkup1, Move);
                                             }
                                         }
                                         else
@@ -694,21 +735,25 @@ namespace Test1
                                                 {
                                                     ChessPiece bkup = new ChessPiece();
                                                     bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                    
+                                                    ChessPiece bkup1 = new ChessPiece();
+                                                    bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                     Score_B = checkscore(Move[2], Move[3]);
                                                     Score_W = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
                                                     BMove = Move;
-                                                    undo(Ai_BoardArray, bkup, Move);
+                                                    undo(Ai_BoardArray, bkup, bkup1, Move);
                                                 }
                                             }
                                             else if (checkscore(Move[2], Move[3]) >= Score_W & Ai_BoardArray[Move[2]][Move[3]].TeamColour != Play_as)
                                             {
                                                 ChessPiece bkup = new ChessPiece();
                                                 bkup = Ai_BoardArray[Move[2]][Move[3]];
-                                                
+                                                ChessPiece bkup1 = new ChessPiece();
+                                                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                                                 Score_W = checkscore(Move[2], Move[3]);
                                                 Score_B = minmax(virtual_MovePiece(Ai_BoardArray, Move), enemy, depth - 1);
-                                                undo(Ai_BoardArray, bkup, Move);
+                                                undo(Ai_BoardArray, bkup, bkup1, Move);
                                             }
                                         }
                                         else
@@ -1128,7 +1173,7 @@ namespace Test1
 
             if (depth == Ai_Level)
             {
-                
+                Debug.WriteLine(Score_B + " " + Score_W);
             }
             if (Play_as == "Black")
             {
