@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -696,9 +697,9 @@ namespace Test1
                 }
             }
 
-            Game.minmax(Copy_BoardArray, "Black", Ai_Level);
+            Game.minmaxroot(Copy_BoardArray, "Black", Ai_Level);
 
-
+            Debug.WriteLine(BMove[0].ToString() + BMove[1].ToString() + BMove[2].ToString() + BMove[3].ToString());
             stx = BMove[0];
             sty = BMove[1];
             endx = BMove[2];
