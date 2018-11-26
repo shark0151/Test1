@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -61,17 +63,17 @@ namespace Test1
             ChessSquare.Children.Add(GetImage());
             ChessSquare.Children.Add(SquareSelect);
         }
-                
-        
 
-        public void RefreshTable()
+
+
+        public async Task RefreshTable()
         {
             GameOver();
             PiecesGrid.Children.Clear();
             Selected = false;
             for (int i = 0; i < 8; i++)
             {
-                
+
                 for (int j = 0; j < 8; j++)
                 {
                     BoardArray[i][j].SetLocation(new Thickness(80 * i, 80 * j, 0, 0), i, j);
@@ -81,10 +83,9 @@ namespace Test1
                     {
                         BoardArray[i][j].EnablePlayer(Turn, "");
                     }
-                    
+
                 }
             }
-            
 
         }
 
@@ -683,33 +684,7 @@ namespace Test1
         {
             PieceImage.Source = imgsource;
         }
-
-        private void Ai_Think()
-        {
-            List<List<ChessPiece>> Copy_BoardArray = new List<List<ChessPiece>>();
-            for (int i = 0; i < 8; i++)
-            {
-                Copy_BoardArray.Add(new List<ChessPiece>());
-                for (int j = 0; j < 8; j++)
-                {
-                    ChessPiece x = BoardArray[i][j];
-                    Copy_BoardArray[i].Add(x);
-                }
-            }
-
-            Game.minmaxroot(Copy_BoardArray, "Black", Ai_Level);
-
-            Debug.WriteLine(BMove[0].ToString() + BMove[1].ToString() + BMove[2].ToString() + BMove[3].ToString());
-            stx = BMove[0];
-            sty = BMove[1];
-            endx = BMove[2];
-            endy = BMove[3];
-            if (Turn == "White") { Turn = "Black"; } else { Turn = "White"; }
-            MovePiece();
-
-
-        }
-
+        
         private void MovePiece()
         {
                         
@@ -727,7 +702,7 @@ namespace Test1
             }
         }
 
-        private void Piece_Click(object sender, RoutedEventArgs e)
+        private async void Piece_Click(object sender, RoutedEventArgs e)
         {
             int direction;//-1 up/left, 1 down/right;
             string enemy = "Black";
@@ -744,7 +719,7 @@ namespace Test1
                         for (int j = 0; j < 8; j++)
                         {
                             BoardArray[i][j].DisablePlayer();
-                            BoardArray[i][j].EnablePlayer(Turn,"");
+                            BoardArray[i][j].EnablePlayer(Turn, "");
                         }
                     }
                     BoardArray[posx][posy].EnablePlayer(Turn, showmove: true);
@@ -756,13 +731,13 @@ namespace Test1
                                 if (posy + direction >= 0)
                                 {
                                     BoardArray[posx][posy + direction].EnablePlayer("None", showmove: true);
-                                    if(posx + 1 <8)
+                                    if (posx + 1 < 8)
                                     {
-                                        BoardArray[posx + 1][posy + direction].EnablePlayer(enemy,Secondary: "", showmove: true);
+                                        BoardArray[posx + 1][posy + direction].EnablePlayer(enemy, Secondary: "", showmove: true);
                                     }
                                     if (posx - 1 >= 0)
                                     {
-                                        BoardArray[posx - 1][posy + direction].EnablePlayer(enemy, Secondary:"", showmove: true);
+                                        BoardArray[posx - 1][posy + direction].EnablePlayer(enemy, Secondary: "", showmove: true);
                                     }
                                 }
                             }
@@ -820,8 +795,8 @@ namespace Test1
                             break;
 
                         case "Bishop":
-                            
-                            for(int i = 1; i<8; i++)
+
+                            for (int i = 1; i < 8; i++)
                             {
 
                                 if (posx + i < 8 & posy + i < 8)
@@ -830,7 +805,7 @@ namespace Test1
                                     {
                                         BoardArray[posx + i][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
-                                    else if (BoardArray[posx + i][posy + i].TeamColour==enemy)
+                                    else if (BoardArray[posx + i][posy + i].TeamColour == enemy)
                                     {
                                         BoardArray[posx + i][posy + i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
@@ -854,7 +829,7 @@ namespace Test1
                                     }
                                     else break;
                                 }
-                                
+
                             }
                             for (int i = 1; i < 8; i++)
                             {
@@ -865,14 +840,14 @@ namespace Test1
                                     {
                                         BoardArray[posx + i][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
-                                    else if(BoardArray[posx + i][posy - i].TeamColour == enemy)
+                                    else if (BoardArray[posx + i][posy - i].TeamColour == enemy)
                                     {
                                         BoardArray[posx + i][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
                                     }
                                     else break;
                                 }
-                                
+
                             }
                             for (int i = 1; i < 8; i++)
                             {
@@ -883,7 +858,7 @@ namespace Test1
                                     {
                                         BoardArray[posx - i][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                     }
-                                    else if(BoardArray[posx - i][posy - i].TeamColour == enemy)
+                                    else if (BoardArray[posx - i][posy - i].TeamColour == enemy)
                                     {
                                         BoardArray[posx - i][posy - i].EnablePlayer(Turn, Enemy: enemy, showmove: true);
                                         break;
@@ -1118,7 +1093,7 @@ namespace Test1
                                 else if (BoardArray[posx + 1][posy].TeamColour == enemy)
                                 {
                                     BoardArray[posx + 1][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
-                                    
+
                                 }
                             }
                             if (posx - 1 >= 0)
@@ -1130,9 +1105,9 @@ namespace Test1
                                 else if (BoardArray[posx - 1][posy].TeamColour == enemy)
                                 {
                                     BoardArray[posx - 1][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
-                                    
+
                                 }
-                                
+
                             }
                             if (posy + 1 < 8)
                             {
@@ -1170,9 +1145,9 @@ namespace Test1
                                 else if (BoardArray[posx - 1][posy - 1].TeamColour == enemy)
                                 {
                                     BoardArray[posx - 1][posy - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
-                                    
+
                                 }
-                                
+
                             }
                             if (posx + 1 < 8 & posy + 1 < 8)
                             {
@@ -1229,21 +1204,31 @@ namespace Test1
                         }
                     }
                 }
-                
+
             }
             else
             {
+
                 endx = posx;
                 endy = posy;
                 MovePiece();
-                if(Turn =="White") { Turn = "Black"; } else { Turn = "White"; }
-                RefreshTable();
+                if (Turn == "White") { Turn = "Black"; } else { Turn = "White"; }
+                await RefreshTable();
+
                 if (Ai_Enabled == true && Turn == "Black")
                 {
-                    Ai_Think();
 
+                    await Task.Run(() => Minmaxroot("Black", Ai_Level));
+                    //Debug.WriteLine(BMove[0].ToString() + BMove[1].ToString() + BMove[2].ToString() + BMove[3].ToString());
+                    stx = BMove[0];
+                    sty = BMove[1];
+                    endx = BMove[2];
+                    endy = BMove[3];
+                    if (Turn == "White") { Turn = "Black"; } else { Turn = "White"; }
+                    MovePiece();
                 }
-                RefreshTable();
+
+                await RefreshTable();
 
             }
             
