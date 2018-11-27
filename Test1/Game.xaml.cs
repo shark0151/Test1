@@ -39,6 +39,7 @@ namespace Test1
         public static bool Check = false;
         public static bool Ai_Enabled = false;
         public static int Ai_Level = 3;
+        public static int Ai_Aggression = 0;
         public static List<int> BMove;
 
 
@@ -53,6 +54,7 @@ namespace Test1
         }
         //events for game over
         //special moves
+        //highlight ai move?
         
 
         public Game()
@@ -227,10 +229,7 @@ namespace Test1
                     }
                 }
 
-                void checkscore(int x, int y)
-                {
-
-                }
+                
                 List<int> Move = new List<int> { 0, 0, 0, 0 };
                 List<List<int>> MoveList = new List<List<int>>();
                 int maxvalue = -999;
@@ -424,15 +423,18 @@ namespace Test1
                                         for (int i = 1; i < 8; i++)
                                         {
 
+
                                             if (x + i < 8 & y + i < 8)
                                             {
-                                                if (!Ai_BoardArray[x + i][y + i].HasPiece)
+                                                Move = new List<int> { x, y, x + i, y + i };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x + i, y + 1);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x + i][y + i].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x + i, y + i);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -443,13 +445,15 @@ namespace Test1
 
                                             if (x - i >= 0 & y + i < 8)
                                             {
-                                                if (!Ai_BoardArray[x - i][y + i].HasPiece)
+                                                Move = new List<int> { x, y, x - i, y + i };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x - i, y + i);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x - i][y + i].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x - i, y + i);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -461,13 +465,15 @@ namespace Test1
 
                                             if (x + i < 8 & y - i >= 0)
                                             {
-                                                if (!Ai_BoardArray[x + i][y - i].HasPiece)
+                                                Move = new List<int> { x, y, x + i, y - i };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x + i, y - i);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x + i][y - i].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x + i, y - i);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -479,13 +485,15 @@ namespace Test1
 
                                             if (x - i >= 0 & y - i >= 0)
                                             {
-                                                if (!Ai_BoardArray[x - i][y - i].HasPiece)
+                                                Move = new List<int> { x, y, x - i, y - i };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x - i, y - i);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x - i][y - i].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x - i, y - i);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -500,13 +508,15 @@ namespace Test1
 
                                             if (x + i < 8)
                                             {
-                                                if (!Ai_BoardArray[x + i][y].HasPiece)
+                                                Move = new List<int> { x, y, x + i, y };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x + i, y);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x + i][y].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x + i, y);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -517,13 +527,15 @@ namespace Test1
 
                                             if (x - i >= 0)
                                             {
-                                                if (!Ai_BoardArray[x - i][y].HasPiece)
+                                                Move = new List<int> { x, y, x - i, y };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x - i, y);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x - i][y].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x - i, y);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -534,13 +546,15 @@ namespace Test1
 
                                             if (y + i < 8)
                                             {
-                                                if (!Ai_BoardArray[x][y + i].HasPiece)
+                                                Move = new List<int> { x, y, x, y + i };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x, y + i);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x][y + i].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x, y + i);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -551,13 +565,15 @@ namespace Test1
 
                                             if (y - i >= 0)
                                             {
-                                                if (!Ai_BoardArray[x][y - i].HasPiece)
+                                                Move = new List<int> { x, y, x, y - i };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x, y - i);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x][y - i].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x, y - i);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -572,13 +588,15 @@ namespace Test1
 
                                             if (x + i < 8)
                                             {
-                                                if (!Ai_BoardArray[x + i][y].HasPiece)
+                                                Move = new List<int> { x, y, x + i, y };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x + i, y);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x + i][y].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x + i, y);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -589,13 +607,15 @@ namespace Test1
 
                                             if (x - i >= 0)
                                             {
-                                                if (!Ai_BoardArray[x - i][y].HasPiece)
+                                                Move = new List<int> { x, y, x - i, y };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x - i, y);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x - i][y].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x - i, y);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -606,13 +626,15 @@ namespace Test1
 
                                             if (y + i < 8)
                                             {
-                                                if (!Ai_BoardArray[x][y + i].HasPiece)
+                                                Move = new List<int> { x, y, x, y + i };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x, y + i);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x][y + i].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x, y + i);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -623,13 +645,15 @@ namespace Test1
 
                                             if (y - i >= 0)
                                             {
-                                                if (!Ai_BoardArray[x][y - i].HasPiece)
+                                                Move = new List<int> { x, y, x, y - i };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x, y - i);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x][y - i].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x, y - i);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -641,13 +665,15 @@ namespace Test1
 
                                             if (x + i < 8 & y + i < 8)
                                             {
-                                                if (!Ai_BoardArray[x + i][y + i].HasPiece)
+                                                Move = new List<int> { x, y, x + i, y + i };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x + i, y + i);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x + i][y + i].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x + i, y + i);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -658,13 +684,15 @@ namespace Test1
 
                                             if (x - i >= 0 & y + i < 8)
                                             {
-                                                if (!Ai_BoardArray[x - i][y + i].HasPiece)
+                                                Move = new List<int> { x, y, x - i, y + i };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x - i, y + i);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x - i][y + i].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x - i, y + i);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -676,13 +704,15 @@ namespace Test1
 
                                             if (x + i < 8 & y - i >= 0)
                                             {
-                                                if (!Ai_BoardArray[x + i][y - i].HasPiece)
+                                                Move = new List<int> { x, y, x + i, y - i };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x + i, y - i);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x + i][y - i].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x + i, y - i);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -694,13 +724,15 @@ namespace Test1
 
                                             if (x - i >= 0 & y - i >= 0)
                                             {
-                                                if (!Ai_BoardArray[x - i][y - i].HasPiece)
+                                                Move = new List<int> { x, y, x - i, y - i };
+
+                                                if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                                 {
-                                                    checkscore(x - i, y - i);
+                                                    MoveList.Add(Move);
                                                 }
-                                                else if (Ai_BoardArray[x - i][y - i].TeamColour == enemy)
+                                                else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                                 {
-                                                    checkscore(x - i, y - i);
+                                                    MoveList.Add(Move);
                                                     break;
                                                 }
                                                 else break;
@@ -712,50 +744,55 @@ namespace Test1
                                     {//up/down
                                         if (x + 1 < 8)
                                         {
-                                            if (!Ai_BoardArray[x + 1][y].HasPiece)
+                                            Move = new List<int> { x, y, x + 1, y };
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x + 1, y);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x + 1][y].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x + 1, y);
+                                                MoveList.Add(Move);
 
                                             }
                                         }
                                         if (x - 1 >= 0)
                                         {
-                                            if (!Ai_BoardArray[x - 1][y].HasPiece)
+                                            Move = new List<int> { x, y, x - 1, y };
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x - 1, y);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x - 1][y].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x - 1, y);
+                                                MoveList.Add(Move);
 
                                             }
 
                                         }
                                         if (y + 1 < 8)
                                         {
-                                            if (!Ai_BoardArray[x][y + 1].HasPiece)
+                                            Move = new List<int> { x, y, x, y + 1 };
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x, y + 1);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x][y + 1].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x, y + 1);
+                                                MoveList.Add(Move);
+
                                             }
 
                                         }
                                         if (y - 1 >= 0)
                                         {
-                                            if (!Ai_BoardArray[x][y - 1].HasPiece)
+                                            Move = new List<int> { x, y, x, y - 1 };
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x, y - 1);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x][y - 1].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x, y - 1);
+                                                MoveList.Add(Move);
 
                                             }
 
@@ -763,52 +800,56 @@ namespace Test1
                                         //diagonally
                                         if (x - 1 >= 0 & y - 1 >= 0)
                                         {
-                                            if (!Ai_BoardArray[x - 1][y - 1].HasPiece)
+                                            Move = new List<int> { x, y, x - 1, y - 1 };
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x - 1, y - 1);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x - 1][y - 1].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x - 1, y - 1);
+                                                MoveList.Add(Move);
 
                                             }
 
                                         }
                                         if (x + 1 < 8 & y + 1 < 8)
                                         {
-                                            if (!Ai_BoardArray[x + 1][y + 1].HasPiece)
+                                            Move = new List<int> { x, y, x + 1, y + 1 };
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x + 1, y + 1);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x + 1][y + 1].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x + 1, y + 1);
+                                                MoveList.Add(Move);
 
                                             }
 
                                         }
                                         if (x - 1 >= 0 & y + 1 < 8)
                                         {
-                                            if (!Ai_BoardArray[x - 1][y + 1].HasPiece)
+                                            Move = new List<int> { x, y, x - 1, y + 1 };
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x - 1, y + 1);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x - 1][y + 1].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x - 1, y + 1);
+                                                MoveList.Add(Move);
 
                                             }
 
                                         }
                                         if (x + 1 < 8 & y - 1 >= 0)
                                         {
-                                            if (!Ai_BoardArray[x + 1][y - 1].HasPiece)
+                                            Move = new List<int> { x, y, x + 1, y - 1 };
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x + 1, y - 1);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x + 1][y - 1].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x + 1, y - 1);
+                                                MoveList.Add(Move);
 
                                             }
 
@@ -831,7 +872,7 @@ namespace Test1
                     ChessPiece bkup1 = new ChessPiece();
                     bkup1 = Ai_BoardArray[Move[0]][Move[1]];
 
-                    var value = Minmax(virtual_MovePiece(Ai_BoardArray, MoveList[i]), enemy, depth - 1);
+                    var value = Minmax(virtual_MovePiece(Ai_BoardArray, MoveList[i]), enemy, depth - 1, 999, -999);
                     undo(Ai_BoardArray, bkup, bkup1, Move);
                     if (value >= maxvalue)
                     {
@@ -845,7 +886,7 @@ namespace Test1
         }
 
         
-        public static int Minmax(List<List<ChessPiece>> Ai_BoardArray, string Play_as, int depth)
+        public static int Minmax(List<List<ChessPiece>> Ai_BoardArray, string Play_as, int depth,int Score_W,int Score_B)
         {
             
             
@@ -854,50 +895,7 @@ namespace Test1
             
             List<int> Move = new List<int> { 0, 0, 0, 0 };
             List<List<int>> MoveList = new List<List<int>>();
-
-
-            void checkscore(int x, int y)
-            {
-                /*
-                int Score = 0;
-                if (Ai_BoardArray[x][y].TeamColour != Play_as)
-                {
-                    switch (Ai_BoardArray[x][y].PieceType)
-                    {
-                        case "None":
-                            Score = 0;
-                            break;
-                        case "Pawn":
-                            Score = 10;
-                            break;
-                        case "Knight":
-                            Score = 20;
-                            break;
-                        case "Bishop":
-                            Score = 30;
-                            break;
-                        case "Rook":
-                            Score = 40;
-                            break;
-                        case "Queen":
-                            Score = 50;
-                            break;
-                        case "King":
-                            Score = 100;
-                            break;
-                    }
-
-                }
-
-                else
-                {
-                    Score = -100;
-
-                }
-
-                return Score;
-                */
-            }
+           
             int checktotalscore()
             {
                 int Score = 0;
@@ -1158,16 +1156,19 @@ namespace Test1
                                 {
                                     for (int i = 1; i < 8; i++)
                                     {
+                                        
 
                                         if (x + i < 8 & y + i < 8)
                                         {
-                                            if (!Ai_BoardArray[x + i][y + i].HasPiece)
+                                            Move = new List<int> { x, y, x + i, y + i };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x + i, y + 1);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x + i][y + i].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x + i, y + i);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1178,13 +1179,15 @@ namespace Test1
 
                                         if (x - i >= 0 & y + i < 8)
                                         {
-                                            if (!Ai_BoardArray[x - i][y + i].HasPiece)
+                                            Move = new List<int> { x, y, x - i, y + i };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x - i, y + i);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x - i][y + i].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x - i, y + i);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1196,13 +1199,15 @@ namespace Test1
 
                                         if (x + i < 8 & y - i >= 0)
                                         {
-                                            if (!Ai_BoardArray[x + i][y - i].HasPiece)
+                                            Move = new List<int> { x, y, x + i, y - i };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x + i, y - i);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x + i][y - i].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x + i, y - i);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1214,13 +1219,15 @@ namespace Test1
 
                                         if (x - i >= 0 & y - i >= 0)
                                         {
-                                            if (!Ai_BoardArray[x - i][y - i].HasPiece)
+                                            Move = new List<int> { x, y, x - i, y - i };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x - i, y - i);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x - i][y - i].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x - i, y - i);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1235,13 +1242,15 @@ namespace Test1
 
                                         if (x + i < 8)
                                         {
-                                            if (!Ai_BoardArray[x + i][y].HasPiece)
+                                            Move = new List<int> { x, y, x + i, y };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x + i, y);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x + i][y].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x + i, y);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1252,13 +1261,15 @@ namespace Test1
 
                                         if (x - i >= 0)
                                         {
-                                            if (!Ai_BoardArray[x - i][y].HasPiece)
+                                            Move = new List<int> { x, y, x - i, y };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x - i, y);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x - i][y].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x - i, y);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1269,13 +1280,15 @@ namespace Test1
 
                                         if (y + i < 8)
                                         {
-                                            if (!Ai_BoardArray[x][y + i].HasPiece)
+                                            Move = new List<int> { x, y, x, y + i };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x, y + i);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x][y + i].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x, y + i);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1286,13 +1299,15 @@ namespace Test1
 
                                         if (y - i >= 0)
                                         {
-                                            if (!Ai_BoardArray[x][y - i].HasPiece)
+                                            Move = new List<int> { x, y, x, y - i };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x, y - i);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x][y - i].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x, y - i);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1307,13 +1322,15 @@ namespace Test1
 
                                         if (x + i < 8)
                                         {
-                                            if (!Ai_BoardArray[x + i][y].HasPiece)
+                                            Move = new List<int> { x, y, x + i, y };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x + i, y);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x + i][y].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x + i, y);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1324,13 +1341,15 @@ namespace Test1
 
                                         if (x - i >= 0)
                                         {
-                                            if (!Ai_BoardArray[x - i][y].HasPiece)
+                                            Move = new List<int> { x, y, x - i, y };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x - i, y);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x - i][y].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x - i, y);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1341,13 +1360,15 @@ namespace Test1
 
                                         if (y + i < 8)
                                         {
-                                            if (!Ai_BoardArray[x][y + i].HasPiece)
+                                            Move = new List<int> { x, y, x, y + i};
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x, y + i);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x][y + i].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x, y + i);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1358,13 +1379,15 @@ namespace Test1
 
                                         if (y - i >= 0)
                                         {
-                                            if (!Ai_BoardArray[x][y - i].HasPiece)
+                                            Move = new List<int> { x, y, x, y - i};
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x, y - i);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x][y - i].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x, y - i);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1376,13 +1399,15 @@ namespace Test1
 
                                         if (x + i < 8 & y + i < 8)
                                         {
-                                            if (!Ai_BoardArray[x + i][y + i].HasPiece)
+                                            Move = new List<int> { x, y, x + i, y + i };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x + i, y + i);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x + i][y + i].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x + i, y + i);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1393,13 +1418,15 @@ namespace Test1
 
                                         if (x - i >= 0 & y + i < 8)
                                         {
-                                            if (!Ai_BoardArray[x - i][y + i].HasPiece)
+                                            Move = new List<int> { x, y, x - i, y + i };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x - i, y + i);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x - i][y + i].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x - i, y + i);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1411,13 +1438,15 @@ namespace Test1
 
                                         if (x + i < 8 & y - i >= 0)
                                         {
-                                            if (!Ai_BoardArray[x + i][y - i].HasPiece)
+                                            Move = new List<int> { x, y, x + i, y - i };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x + i, y - i);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x + i][y - i].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x + i, y - i);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1429,13 +1458,15 @@ namespace Test1
 
                                         if (x - i >= 0 & y - i >= 0)
                                         {
-                                            if (!Ai_BoardArray[x - i][y - i].HasPiece)
+                                            Move = new List<int> { x, y, x - i, y - i };
+
+                                            if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                             {
-                                                checkscore(x - i, y - i);
+                                                MoveList.Add(Move);
                                             }
-                                            else if (Ai_BoardArray[x - i][y - i].TeamColour == enemy)
+                                            else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                             {
-                                                checkscore(x - i, y - i);
+                                                MoveList.Add(Move);
                                                 break;
                                             }
                                             else break;
@@ -1447,50 +1478,55 @@ namespace Test1
                                 {//up/down
                                     if (x + 1 < 8)
                                     {
-                                        if (!Ai_BoardArray[x + 1][y].HasPiece)
+                                        Move = new List<int> { x, y, x + 1, y};
+                                        if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                         {
-                                            checkscore(x + 1, y);
+                                            MoveList.Add(Move);
                                         }
-                                        else if (Ai_BoardArray[x + 1][y].TeamColour == enemy)
+                                        else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                         {
-                                            checkscore(x + 1, y);
+                                            MoveList.Add(Move);
 
                                         }
                                     }
                                     if (x - 1 >= 0)
                                     {
-                                        if (!Ai_BoardArray[x - 1][y].HasPiece)
+                                        Move = new List<int> { x, y, x - 1, y };
+                                        if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                         {
-                                            checkscore(x - 1, y);
+                                            MoveList.Add(Move);
                                         }
-                                        else if (Ai_BoardArray[x - 1][y].TeamColour == enemy)
+                                        else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                         {
-                                            checkscore(x - 1, y);
+                                            MoveList.Add(Move);
 
                                         }
 
                                     }
                                     if (y + 1 < 8)
                                     {
-                                        if (!Ai_BoardArray[x][y + 1].HasPiece)
+                                        Move = new List<int> { x, y, x, y + 1};
+                                        if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                         {
-                                            checkscore(x, y + 1);
+                                            MoveList.Add(Move);
                                         }
-                                        else if (Ai_BoardArray[x][y + 1].TeamColour == enemy)
+                                        else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                         {
-                                            checkscore(x, y + 1);
+                                            MoveList.Add(Move);
+
                                         }
 
                                     }
                                     if (y - 1 >= 0)
                                     {
-                                        if (!Ai_BoardArray[x][y - 1].HasPiece)
+                                        Move = new List<int> { x, y, x, y - 1 };
+                                        if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                         {
-                                            checkscore(x, y - 1);
+                                            MoveList.Add(Move);
                                         }
-                                        else if (Ai_BoardArray[x][y - 1].TeamColour == enemy)
+                                        else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                         {
-                                            checkscore(x, y - 1);
+                                            MoveList.Add(Move);
 
                                         }
 
@@ -1498,52 +1534,56 @@ namespace Test1
                                     //diagonally
                                     if (x - 1 >= 0 & y - 1 >= 0)
                                     {
-                                        if (!Ai_BoardArray[x - 1][y - 1].HasPiece)
+                                        Move = new List<int> { x, y, x - 1, y - 1 };
+                                        if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                         {
-                                            checkscore(x - 1, y - 1);
+                                            MoveList.Add(Move);
                                         }
-                                        else if (Ai_BoardArray[x - 1][y - 1].TeamColour == enemy)
+                                        else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                         {
-                                            checkscore(x - 1, y - 1);
+                                            MoveList.Add(Move);
 
                                         }
 
                                     }
                                     if (x + 1 < 8 & y + 1 < 8)
                                     {
-                                        if (!Ai_BoardArray[x + 1][y + 1].HasPiece)
+                                        Move = new List<int> { x, y, x + 1, y + 1 };
+                                        if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                         {
-                                            checkscore(x + 1, y + 1);
+                                            MoveList.Add(Move);
                                         }
-                                        else if (Ai_BoardArray[x + 1][y + 1].TeamColour == enemy)
+                                        else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                         {
-                                            checkscore(x + 1, y + 1);
+                                            MoveList.Add(Move);
 
                                         }
 
                                     }
                                     if (x - 1 >= 0 & y + 1 < 8)
                                     {
-                                        if (!Ai_BoardArray[x - 1][y + 1].HasPiece)
+                                        Move = new List<int> { x, y, x - 1, y + 1 };
+                                        if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                         {
-                                            checkscore(x - 1, y + 1);
+                                            MoveList.Add(Move);
                                         }
-                                        else if (Ai_BoardArray[x - 1][y + 1].TeamColour == enemy)
+                                        else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                         {
-                                            checkscore(x - 1, y + 1);
+                                            MoveList.Add(Move);
 
                                         }
 
                                     }
                                     if (x + 1 < 8 & y - 1 >= 0)
                                     {
-                                        if (!Ai_BoardArray[x + 1][y - 1].HasPiece)
+                                        Move = new List<int> { x, y, x + 1, y - 1};
+                                        if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                         {
-                                            checkscore(x + 1, y - 1);
+                                            MoveList.Add(Move);
                                         }
-                                        else if (Ai_BoardArray[x + 1][y - 1].TeamColour == enemy)
+                                        else if (Ai_BoardArray[Move[2]][Move[3]].TeamColour == enemy)
                                         {
-                                            checkscore(x + 1, y - 1);
+                                            MoveList.Add(Move);
 
                                         }
 
@@ -1566,7 +1606,7 @@ namespace Test1
                 ChessPiece bkup1 = new ChessPiece();
                 bkup1 = Ai_BoardArray[Move[0]][Move[1]];
 
-                var value = Minmax(virtual_MovePiece(Ai_BoardArray, MoveList[i]), enemy, depth - 1);
+                var value = Minmax(virtual_MovePiece(Ai_BoardArray, MoveList[i]), enemy, depth - 1, Score_W, Score_B);
                 undo(Ai_BoardArray, bkup, bkup1, Move);
                 if (Play_as == "Black")
                 {
@@ -1575,12 +1615,32 @@ namespace Test1
                         maxvalue = value;
 
                     }
+                    if (maxvalue >= Score_B)
+                    {
+                        Score_B = maxvalue;
+
+                    }
+                    if (Score_W <= Score_B)
+                    {
+                        return maxvalue;
+
+                    }
                 }
                 else
                 {
                     if (value <= maxvalue)
                     {
                         maxvalue = value;
+
+                    }
+                    if (maxvalue <= Score_W)
+                    {
+                        Score_W = maxvalue;
+
+                    }
+                    if (Score_W <= Score_B)
+                    {
+                        return maxvalue;
 
                     }
                 }
