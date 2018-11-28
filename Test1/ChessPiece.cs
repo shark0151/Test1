@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,9 +19,13 @@ using static Test1.Game;
 
 namespace Test1
 {
-    public class ChessPiece
+    public class ChessPiece : IDisposable
     {
-        
+        // Flag: Has Dispose already been called?
+        bool disposed = false;
+        // Instantiate a SafeHandle instance.
+        SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
+
         public string TeamColour;
         public string PieceType;
         public bool HasPiece = false;
@@ -31,10 +37,30 @@ namespace Test1
         private SolidColorBrush highlightcolor = new SolidColorBrush(Color.FromArgb(150, 0, 0, 150));
         private SolidColorBrush normalcolor = new SolidColorBrush(Color.FromArgb(100, 20, 20, 20));
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
 
+            if (disposing)
+            {
+                handle.Dispose();
+                
+                // Free any other managed objects here.
+                //
+            }
+
+            disposed = true;
+        }
         public ChessPiece()
         {
-            
+            Dispose(false);
+
             TeamColour = "None";
             PieceType = "None";
             PieceImage = new Image();
@@ -70,6 +96,7 @@ namespace Test1
         {
             GameOver();
             PiecesGrid.Children.Clear();
+            
             Selected = false;
             for (int i = 0; i < 8; i++)
             {
@@ -1217,7 +1244,7 @@ namespace Test1
 
                 if (Ai_Enabled == true && Turn == "Black")
                 {
-
+                    
                     await Task.Run(() => Minmaxroot("Black", Ai_Level));
                     //Debug.WriteLine(BMove[0].ToString() + BMove[1].ToString() + BMove[2].ToString() + BMove[3].ToString());
                     stx = BMove[0];

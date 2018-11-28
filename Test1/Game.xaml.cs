@@ -42,7 +42,12 @@ namespace Test1
         public static int Ai_Aggression = 0;
         public static List<int> BMove;
 
-
+        public class SChesspiece
+        {
+            public string TeamColour;
+            public string PieceType;
+            public bool HasPiece = false;
+        }
 
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -55,6 +60,7 @@ namespace Test1
         //events for game over
         //special moves
         //highlight ai move?
+
         
 
         public Game()
@@ -159,7 +165,7 @@ namespace Test1
 
         }
 
-        private static List<List<ChessPiece>> virtual_MovePiece(List<List<ChessPiece>> virtual_BoardArrayx, List<int> Moveit)
+        private static List<List<SChesspiece>> virtual_MovePiece(List<List<SChesspiece>> virtual_BoardArrayx, List<int> Moveit)
         {
 
             int astx, asty, aendx, aendy;
@@ -169,7 +175,7 @@ namespace Test1
             aendy = Moveit[3];
 
             /*
-            List<List<ChessPiece>> virtual_BoardArrayx = new List<List<ChessPiece>>();
+            List<List<ChessPiece>> virtual_BoardArrayx = new List<List<S>>();
             for (int i = 0; i < 8; i++)
             {
                 virtual_BoardArrayx.Add(new List<ChessPiece>());
@@ -184,20 +190,20 @@ namespace Test1
 
             if (virtual_BoardArrayx[aendx][aendy].TeamColour != virtual_BoardArrayx[astx][asty].TeamColour)
             {
-                ChessPiece Piece = virtual_BoardArrayx[astx][asty];
+                SChesspiece Piece = virtual_BoardArrayx[astx][asty];
                 virtual_BoardArrayx[aendx][aendy] = Piece;
-                virtual_BoardArrayx[astx][asty] = new ChessPiece();
+                virtual_BoardArrayx[astx][asty] = new SChesspiece();
             }
             else
             {
-                ChessPiece Piece = virtual_BoardArrayx[astx][asty];
+                SChesspiece Piece = virtual_BoardArrayx[astx][asty];
                 virtual_BoardArrayx[astx][asty] = virtual_BoardArrayx[aendx][aendy];
                 virtual_BoardArrayx[aendx][aendy] = Piece;
             }
             return virtual_BoardArrayx;
         }
 
-        private static void undo(List<List<ChessPiece>> virtual_BoardArrayx, ChessPiece Piece, ChessPiece Piece2, List<int> move)
+        private static void undo(List<List<SChesspiece>> virtual_BoardArrayx, SChesspiece Piece, SChesspiece Piece2, List<int> move)
         {
             
             
@@ -216,20 +222,27 @@ namespace Test1
 
         public static async Task Minmaxroot(string Play_as, int depth)
         {
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, () =>
             {
-                List<List<ChessPiece>> Ai_BoardArray = new List<List<ChessPiece>>();
+                List<List<SChesspiece>> Ai_BoardArray = new List<List<SChesspiece>>();
+
+
                 for (int i = 0; i < 8; i++)
                 {
-                    Ai_BoardArray.Add(new List<ChessPiece>());
+                    Ai_BoardArray.Add(new List<SChesspiece>());
                     for (int j = 0; j < 8; j++)
                     {
-                        ChessPiece x = BoardArray[i][j];
+                        SChesspiece x = new SChesspiece();
+                        x.HasPiece = BoardArray[i][j].HasPiece;
+                        x.PieceType = BoardArray[i][j].PieceType;
+                        x.TeamColour = BoardArray[i][j].TeamColour;
                         Ai_BoardArray[i].Add(x);
                     }
                 }
 
                 
+
+
                 List<int> Move = new List<int> { 0, 0, 0, 0 };
                 List<List<int>> MoveList = new List<List<int>>();
                 int maxvalue = -999;
@@ -867,13 +880,14 @@ namespace Test1
                 for (int i = 0; i < MoveList.Count; i++)
                 {
                     Move = MoveList[i];
-                    ChessPiece bkup = new ChessPiece();
+                    SChesspiece bkup = new SChesspiece();
                     bkup = Ai_BoardArray[Move[2]][Move[3]];
-                    ChessPiece bkup1 = new ChessPiece();
+                    SChesspiece bkup1 = new SChesspiece();
                     bkup1 = Ai_BoardArray[Move[0]][Move[1]];
 
                     var value = Minmax(virtual_MovePiece(Ai_BoardArray, MoveList[i]), enemy, depth - 1, 999, -999);
                     undo(Ai_BoardArray, bkup, bkup1, Move);
+                    
                     if (value >= maxvalue)
                     {
                         maxvalue = value;
@@ -882,16 +896,14 @@ namespace Test1
 
 
                 }
+
+                
             });
         }
 
         
-        public static int Minmax(List<List<ChessPiece>> Ai_BoardArray, string Play_as, int depth,int Score_W,int Score_B)
+        public static int Minmax(List<List<SChesspiece>> Ai_BoardArray, string Play_as, int depth,int Score_W,int Score_B)
         {
-            
-            
-            //maybe reduce arraycopy to only necessary info 
-            
             
             List<int> Move = new List<int> { 0, 0, 0, 0 };
             List<List<int>> MoveList = new List<List<int>>();
@@ -1601,21 +1613,22 @@ namespace Test1
             for( int i = 0;i<MoveList.Count;i++)
             {
                 Move = MoveList[i];
-                ChessPiece bkup = new ChessPiece();
+                SChesspiece bkup = new SChesspiece();
                 bkup = Ai_BoardArray[Move[2]][Move[3]];
-                ChessPiece bkup1 = new ChessPiece();
+                SChesspiece bkup1 = new SChesspiece();
                 bkup1 = Ai_BoardArray[Move[0]][Move[1]];
 
                 var value = Minmax(virtual_MovePiece(Ai_BoardArray, MoveList[i]), enemy, depth - 1, Score_W, Score_B);
                 undo(Ai_BoardArray, bkup, bkup1, Move);
+                
                 if (Play_as == "Black")
                 {
-                    if (value >= maxvalue)
+                    if (value > maxvalue)
                     {
                         maxvalue = value;
 
                     }
-                    if (maxvalue >= Score_B)
+                    if (maxvalue > Score_B)
                     {
                         Score_B = maxvalue;
 
@@ -1628,12 +1641,12 @@ namespace Test1
                 }
                 else
                 {
-                    if (value <= maxvalue)
+                    if (value < maxvalue)
                     {
                         maxvalue = value;
 
                     }
-                    if (maxvalue <= Score_W)
+                    if (maxvalue < Score_W)
                     {
                         Score_W = maxvalue;
 
