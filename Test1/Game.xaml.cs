@@ -42,7 +42,7 @@ namespace Test1
         public static int Ai_Aggression = 0;
         public static List<int> BMove;
 
-        public class SChesspiece
+        private class SChesspiece
         {
             public string TeamColour;
             public string PieceType;
@@ -233,9 +233,9 @@ namespace Test1
                     for (int j = 0; j < 8; j++)
                     {
                         SChesspiece x = new SChesspiece();
-                        x.HasPiece = BoardArray[i][j].HasPiece;
-                        x.PieceType = BoardArray[i][j].PieceType;
-                        x.TeamColour = BoardArray[i][j].TeamColour;
+                        x.HasPiece = BoardArray[i][j].GetHasPiece();
+                        x.PieceType = BoardArray[i][j].GetPieceType();
+                        x.TeamColour = BoardArray[i][j].GetPieceTeam();
                         Ai_BoardArray[i].Add(x);
                     }
                 }
@@ -902,7 +902,7 @@ namespace Test1
         }
 
         
-        public static int Minmax(List<List<SChesspiece>> Ai_BoardArray, string Play_as, int depth,int Score_W,int Score_B)
+        private static int Minmax(List<List<SChesspiece>> Ai_BoardArray, string Play_as, int depth,int Score_W,int Score_B)
         {
             
             List<int> Move = new List<int> { 0, 0, 0, 0 };

@@ -26,16 +26,17 @@ namespace Test1
         // Instantiate a SafeHandle instance.
         SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
 
-        public string TeamColour;
-        public string PieceType;
-        public bool HasPiece = false;
+        private string TeamColour;
+        private string PieceType;
+        private bool HasPiece = false;
+        private int SpecialMove;
         private Image PieceImage = new Image();
         private Grid ChessSquare = new Grid();
         private Button SquareSelect = new Button();
         private int posx, posy;
-        public string status = "";
         private SolidColorBrush highlightcolor = new SolidColorBrush(Color.FromArgb(150, 0, 0, 150));
         private SolidColorBrush normalcolor = new SolidColorBrush(Color.FromArgb(100, 20, 20, 20));
+        private string status="Playing";
 
         public void Dispose()
         {
@@ -57,10 +58,12 @@ namespace Test1
 
             disposed = true;
         }
+
         public ChessPiece()
         {
             Dispose(false);
 
+            SpecialMove = 0;
             TeamColour = "None";
             PieceType = "None";
             PieceImage = new Image();
@@ -90,9 +93,77 @@ namespace Test1
             ChessSquare.Children.Add(SquareSelect);
         }
 
+        public void SetLocation(Thickness x, int i, int j)
+        {
+            ChessSquare.Margin = x;
+            List<string> sqnames = new List<string>(new string[] { "A", "B", "C", "D", "E", "F", "G", "H" });
+            SquareSelect.Content = sqnames[i] + j.ToString();
+            posx = i;
+            posy = j;
 
+        }
+        public void SetImage(BitmapImage imgsource)
+        {
+            PieceImage.Source = imgsource;
+        }
+        public Grid GetSquare()
+        {
+            return ChessSquare;
+        }
+        public string GetPieceTeam()
+        {
+            return TeamColour;
+        }
+        public string GetPieceType()
+        {
+            return PieceType;
+        }
+        public void SetPieceType(string type)
+        {
+            PieceType = type;
+            if (type == "Pawn")
+                SpecialMove = 1; //2 for checking En passant. only availabe a round if pawn moved two squares ; 3 for end pos
+            if (type == "King")
+                SpecialMove = 4;
+            if (type == "Rook")
+                SpecialMove = 5;
+        }
+        public void SetPieceTeam(string team)
+        {
+            TeamColour = team;
+        }
+        public void SetHasPiece(bool pieceactive)
+        {
+            HasPiece = pieceactive;
+        }
+        public bool GetHasPiece()
+        {
+            return HasPiece;
+        }
+        public Image GetImage()
+        {
+            return PieceImage;
+        }
+        public void EnablePlayer(string TeamTurn, string Secondary = "None", string Enemy = "", bool showmove = false)
+        {
+            if (TeamColour == TeamTurn || TeamColour == Secondary || TeamColour == Enemy)
+            {
+                SquareSelect.IsEnabled = true;
+                if(PieceType=="Pawn" && SpecialMove == 2)
+                { SpecialMove = 0; }              
+                if (showmove == true)
+                {
+                    SquareSelect.Background = highlightcolor; //highlight color
+                }
+                else SquareSelect.Background = normalcolor; //normal
+            }
+        }
+        public void DisablePlayer()
+        {
+            SquareSelect.IsEnabled = false;
+        }
 
-        public async Task RefreshTable()
+        private async Task RefreshTable()
         {
             GameOver();
             PiecesGrid.Children.Clear();
@@ -106,7 +177,7 @@ namespace Test1
                     BoardArray[i][j].SetLocation(new Thickness(80 * i, 80 * j, 0, 0), i, j);
                     PiecesGrid.Children.Add(BoardArray[i][j].GetSquare());
                     BoardArray[i][j].DisablePlayer();
-                    if (status != "check")
+                    if (status == "Playing")
                     {
                         BoardArray[i][j].EnablePlayer(Turn, "");
                     }
@@ -116,7 +187,6 @@ namespace Test1
 
         }
 
-        
         private void GameOver()
         {
             string Play_as = "None";
@@ -129,7 +199,7 @@ namespace Test1
                     
                     case "King":
                         {
-                            status = "check";
+                            status = "Check";
                         }
                         break;
                 }
@@ -652,74 +722,27 @@ namespace Test1
                     }
                 }
             }
-        }
-        public void EnablePlayer(string TeamTurn, string Secondary = "None",string Enemy = "", bool showmove = false)
-        {
-            if (TeamColour == TeamTurn || TeamColour == Secondary || TeamColour == Enemy)
-            {
-                SquareSelect.IsEnabled = true;
-                if (showmove == true)
-                {
-                    SquareSelect.Background = highlightcolor; //highlight color
-                }
-                else SquareSelect.Background = normalcolor; //normal
-            }
-        }
-        public void DisablePlayer()
-        {
-            SquareSelect.IsEnabled = false;
-        }
 
-        public void SetLocation(Thickness x, int i, int j)
-        {
-            ChessSquare.Margin = x;
-            List<string> sqnames = new List<string>(new string[] { "A", "B", "C", "D", "E", "F", "G", "H" });
-            SquareSelect.Content = sqnames[i] + j.ToString();
-            posx = i;
-            posy = j;
-
-        }
-        public Grid GetSquare()
-        {
-            return ChessSquare;
-        }
-        public string GetPieceTeam()
-        {
-            return TeamColour;
-        }
-        public string GetPieceType()
-        {
-            return PieceType;
-        }
-        public void SetPieceType(string type)
-        {
-            PieceType = type;
-        }
-        public void SetPieceTeam(string team)
-        {
-            TeamColour = team;
-        }
-        public void SetHasPiece(bool pieceactive)
-        {
-            HasPiece = pieceactive;
-        }
-        public Image GetImage()
-        {
-            return PieceImage;
-        }
-        public void SetImage(BitmapImage imgsource)
-        {
-            PieceImage.Source = imgsource;
         }
         
-        private void MovePiece()
+        private void MovePiece(int direction = 0)
         {
                         
             if(BoardArray[endx][endy].TeamColour != BoardArray[stx][sty].TeamColour)
             {
-                ChessPiece Piece = BoardArray[stx][sty];
-                BoardArray[endx][endy] = Piece;
-                BoardArray[stx][sty] = new ChessPiece();
+                if (BoardArray[stx][sty].PieceType == "Pawn" && BoardArray[endx][endy].SpecialMove == 3)
+                {
+                    ChessPiece Piece = BoardArray[stx][sty];
+                    BoardArray[endx][endy] = Piece; //also resets SpecialMove to 0
+                    BoardArray[stx][sty] = new ChessPiece();
+                    BoardArray[endx][sty] = new ChessPiece();
+                }
+                else
+                {
+                    ChessPiece Piece = BoardArray[stx][sty];
+                    BoardArray[endx][endy] = Piece;
+                    BoardArray[stx][sty] = new ChessPiece();
+                }
             }
             else
             {
@@ -758,13 +781,28 @@ namespace Test1
                                 if (posy + direction >= 0)
                                 {
                                     BoardArray[posx][posy + direction].EnablePlayer("None", showmove: true);
+                                    if (!BoardArray[posx][posy + direction].HasPiece)
+                                        if (SpecialMove == 1 && posy + direction + direction >= 0)
+                                        {
+                                            BoardArray[posx][posy + direction + direction].EnablePlayer("None", showmove: true);
+                                        }
                                     if (posx + 1 < 8)
                                     {
                                         BoardArray[posx + 1][posy + direction].EnablePlayer(enemy, Secondary: "", showmove: true);
+                                        if(BoardArray[posx + 1][posy].SpecialMove == 2 && BoardArray[posx + 1][posy].TeamColour == enemy)
+                                        {
+                                            BoardArray[posx + 1][posy + direction].EnablePlayer("None", showmove: true);
+                                            BoardArray[posx + 1][posy + direction].SpecialMove = 3;
+                                        }
                                     }
                                     if (posx - 1 >= 0)
                                     {
                                         BoardArray[posx - 1][posy + direction].EnablePlayer(enemy, Secondary: "", showmove: true);
+                                        if (BoardArray[posx - 1][posy].SpecialMove == 2 && BoardArray[posx - 1][posy].TeamColour == enemy)
+                                        {
+                                            BoardArray[posx - 1][posy + direction].EnablePlayer("None", showmove: true);
+                                            BoardArray[posx - 1][posy + direction].SpecialMove = 3;
+                                        }
                                     }
                                 }
                             }
@@ -773,13 +811,28 @@ namespace Test1
                                 if (posy + direction < 8)
                                 {
                                     BoardArray[posx][posy + direction].EnablePlayer("None", showmove: true);
+                                    if (!BoardArray[posx][posy + direction].HasPiece)
+                                        if (SpecialMove == 1 && posy + direction + direction < 8)
+                                        {
+                                            BoardArray[posx][posy + direction + direction].EnablePlayer("None", showmove: true);
+                                        }
                                     if (posx + 1 < 8)
                                     {
                                         BoardArray[posx + 1][posy + direction].EnablePlayer(enemy, Secondary: "", showmove: true);
+                                        if (BoardArray[posx + 1][posy].SpecialMove == 2 && BoardArray[posx + 1][posy].TeamColour == enemy)
+                                        {
+                                            BoardArray[posx + 1][posy + direction].EnablePlayer("None", showmove: true);
+                                            BoardArray[posx + 1][posy + direction].SpecialMove = 3;
+                                        }
                                     }
                                     if (posx - 1 >= 0)
                                     {
                                         BoardArray[posx - 1][posy + direction].EnablePlayer(enemy, Secondary: "", showmove: true);
+                                        if (BoardArray[posx - 1][posy].SpecialMove == 2 && BoardArray[posx - 1][posy].TeamColour == enemy)
+                                        {
+                                            BoardArray[posx - 1][posy + direction].EnablePlayer("None", showmove: true);
+                                            BoardArray[posx - 1][posy + direction].SpecialMove = 3;
+                                        }
                                     }
                                 }
                             }
@@ -1235,16 +1288,23 @@ namespace Test1
             }
             else
             {
-
+                
                 endx = posx;
                 endy = posy;
-                MovePiece();
+                if (BoardArray[stx][sty].PieceType == "Pawn")
+                {
+                    if (Math.Abs(sty - endy) == 2)
+                        BoardArray[stx][sty].SpecialMove = 2;
+                    else
+                        BoardArray[stx][sty].SpecialMove = 0;
+
+                }
+                MovePiece(direction: direction);
                 if (Turn == "White") { Turn = "Black"; } else { Turn = "White"; }
                 await RefreshTable();
 
                 if (Ai_Enabled == true && Turn == "Black")
                 {
-                    
                     await Task.Run(() => Minmaxroot("Black", Ai_Level));
                     //Debug.WriteLine(BMove[0].ToString() + BMove[1].ToString() + BMove[2].ToString() + BMove[3].ToString());
                     stx = BMove[0];
@@ -1253,9 +1313,9 @@ namespace Test1
                     endy = BMove[3];
                     if (Turn == "White") { Turn = "Black"; } else { Turn = "White"; }
                     MovePiece();
+                    await RefreshTable();
                 }
-
-                await RefreshTable();
+                
 
             }
             
