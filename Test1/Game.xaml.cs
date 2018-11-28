@@ -55,6 +55,8 @@ namespace Test1
         //events for game over
         //special moves
         //highlight ai move?
+        //possible memory leak, delete arrays after use?
+        //location bonus
         
 
         public Game()
@@ -883,6 +885,7 @@ namespace Test1
 
                 }
             });
+            GC.Collect();
         }
 
         
@@ -908,7 +911,7 @@ namespace Test1
                             switch (Ai_BoardArray[x][y].PieceType)
                             {
                                 case "None":
-                                    //
+                                    Score = Score + 0;
                                     break;
                                 case "Pawn":
                                     Score = Score + 10;
@@ -934,7 +937,7 @@ namespace Test1
                         else switch (Ai_BoardArray[x][y].PieceType)
                             {
                                 case "None":
-                                    //
+                                    Score = Score - 0;
                                     break;
                                 case "Pawn":
                                     Score = Score - 10;
@@ -964,6 +967,7 @@ namespace Test1
             if (depth == 0)
             {
                 return checktotalscore();
+                
             }
 
             string enemy = "";
