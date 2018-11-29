@@ -731,7 +731,7 @@ namespace Test1
 
         }
         
-        private void MovePiece(int direction = 0)
+        private void MovePiece()
         {
                         
             if(BoardArray[endx][endy].TeamColour != BoardArray[stx][sty].TeamColour)
@@ -1311,20 +1311,24 @@ namespace Test1
                         BoardArray[stx][sty].SpecialMove = 0;
 
                 }
-                MovePiece(direction: direction);
+                MovePiece();
                 if (Turn == "White") { Turn = "Black"; } else { Turn = "White"; }
+                
                 await RefreshTable();
 
                 if (Ai_Enabled == true && Turn == "Black")
                 {
+
                     await Task.Run(() => Minmaxroot("Black", Ai_Level));
                     //Debug.WriteLine(BMove[0].ToString() + BMove[1].ToString() + BMove[2].ToString() + BMove[3].ToString());
                     stx = BMove[0];
                     sty = BMove[1];
                     endx = BMove[2];
                     endy = BMove[3];
-                    if (Turn == "White") { Turn = "Black"; } else { Turn = "White"; }
+
+                    if (BoardArray[endx][sty].PieceType == "Pawn" && BoardArray[endx][sty].TeamColour == "White") { BoardArray[endx][endy].SpecialMove = 3; }
                     MovePiece();
+                    if (Turn == "White") { Turn = "Black"; } else { Turn = "White"; }
                     await RefreshTable();
                 }
                 

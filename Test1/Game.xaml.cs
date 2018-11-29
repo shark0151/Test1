@@ -58,8 +58,10 @@ namespace Test1
             Ai_Enabled = (bool)e.Parameter;
 
         }
+
         //events for game over
         //special moves
+        //settings and buttons
         //highlight ai move?
 
         
@@ -181,9 +183,19 @@ namespace Test1
 
             if (virtual_BoardArrayx[aendx][aendy].TeamColour != virtual_BoardArrayx[astx][asty].TeamColour)
             {
-                SChesspiece Piece = virtual_BoardArrayx[astx][asty];
-                virtual_BoardArrayx[aendx][aendy] = Piece;
-                virtual_BoardArrayx[astx][asty] = new SChesspiece();
+                if (virtual_BoardArrayx[astx][asty].PieceType == "Pawn" && virtual_BoardArrayx[aendx][aendy].SpecialMove == 3)
+                {
+                    SChesspiece Piece = virtual_BoardArrayx[astx][asty];
+                    virtual_BoardArrayx[aendx][aendy] = Piece; //also resets SpecialMove to 0
+                    virtual_BoardArrayx[astx][asty] = new SChesspiece();
+                    virtual_BoardArrayx[aendx][asty] = new SChesspiece();
+                }
+                else
+                {
+                    SChesspiece Piece = virtual_BoardArrayx[astx][asty];
+                    virtual_BoardArrayx[aendx][aendy] = Piece;
+                    virtual_BoardArrayx[astx][asty] = new SChesspiece();
+                }
             }
             else
             {
@@ -282,8 +294,9 @@ namespace Test1
                                                         }
 
                                                     }
-                                                    else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2 && Ai_BoardArray[Move[2]][Move[3]].SpecialMove ==3)
+                                                    else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2)
                                                     {
+                                                        Ai_BoardArray[Move[2]][Move[3]].SpecialMove = 3;
                                                         MoveList.Add(Move);
                                                     }
                                                 }
@@ -298,8 +311,9 @@ namespace Test1
                                                         }
 
                                                     }
-                                                    else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2 && Ai_BoardArray[Move[2]][Move[3]].SpecialMove == 3)
+                                                    else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2 )
                                                     {
+                                                        Ai_BoardArray[Move[2]][Move[3]].SpecialMove = 3;
                                                         MoveList.Add(Move);
                                                     }
                                                 }
@@ -454,7 +468,6 @@ namespace Test1
                                         }
                                         break;
                                     }
-
                                 case "Bishop":
                                     {
                                         for (int i = 1; i < 8; i++)
@@ -903,6 +916,15 @@ namespace Test1
                 for (int i = 0; i < MoveList.Count; i++)
                 {
                     Move = MoveList[i];
+
+                    if (Ai_BoardArray[Move[0]][Move[1]].PieceType == "Pawn")
+                    {
+                        if (Math.Abs(Move[1] - Move[3]) == 2)
+                            Ai_BoardArray[Move[0]][Move[1]].SpecialMove = 2;
+                        else
+                            Ai_BoardArray[Move[0]][Move[1]].SpecialMove = 0;
+
+                    }
                     //check if pawn and if spacial move
                     SChesspiece bkup = new SChesspiece();
                     bkup = Ai_BoardArray[Move[2]][Move[3]];
