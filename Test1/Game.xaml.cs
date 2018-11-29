@@ -349,8 +349,9 @@ namespace Test1
                                                             MoveList.Add(Move);
                                                         }
                                                     }
-                                                    else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2 && Ai_BoardArray[Move[2]][Move[3]].SpecialMove == 3)
+                                                    else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2)
                                                     {
+                                                        Ai_BoardArray[Move[2]][Move[3]].SpecialMove = 3;
                                                         MoveList.Add(Move);
                                                     }
                                                 }
@@ -364,8 +365,9 @@ namespace Test1
                                                             MoveList.Add(Move);
                                                         }
                                                     }
-                                                    else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2 && Ai_BoardArray[Move[2]][Move[3]].SpecialMove == 3)
+                                                    else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2)
                                                     {
+                                                        Ai_BoardArray[Move[2]][Move[3]].SpecialMove = 3;
                                                         MoveList.Add(Move);
                                                     }
                                                 }
@@ -1049,6 +1051,14 @@ namespace Test1
                                             if (Ai_BoardArray[Move[2]][Move[3]].HasPiece == false)
                                             {
                                                 MoveList.Add(Move);
+                                                if (y + 2 < 8)
+                                                {
+                                                    Move = new List<int> { x, y, x, y + 2 };
+                                                    if (Ai_BoardArray[Move[2]][Move[3]].HasPiece == false && Ai_BoardArray[x][y].SpecialMove == 1)
+                                                    {
+                                                        MoveList.Add(Move);
+                                                    }
+                                                }
                                             }
                                             if (x + 1 < 8)
                                             {
@@ -1061,6 +1071,11 @@ namespace Test1
                                                     }
 
                                                 }
+                                                else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2)
+                                                {
+                                                    Ai_BoardArray[Move[2]][Move[3]].SpecialMove = 3;
+                                                    MoveList.Add(Move);
+                                                }
                                             }
                                             if (x - 1 >= 0)
                                             {
@@ -1072,6 +1087,11 @@ namespace Test1
                                                         MoveList.Add(Move);
                                                     }
 
+                                                }
+                                                else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2)
+                                                {
+                                                    Ai_BoardArray[Move[2]][Move[3]].SpecialMove = 3;
+                                                    MoveList.Add(Move);
                                                 }
                                             }
                                         }
@@ -1086,6 +1106,14 @@ namespace Test1
                                             if (Ai_BoardArray[Move[2]][Move[3]].HasPiece == false)
                                             {
                                                 MoveList.Add(Move);
+                                                if (y - 2 >= 0)
+                                                {
+                                                    Move = new List<int> { x, y, x, y - 2 };
+                                                    if (Ai_BoardArray[Move[2]][Move[3]].HasPiece == false && Ai_BoardArray[x][y].SpecialMove == 1)
+                                                    {
+                                                        MoveList.Add(Move);
+                                                    }
+                                                }
                                             }
 
                                             if (x + 1 < 8)
@@ -1098,6 +1126,11 @@ namespace Test1
                                                         MoveList.Add(Move);
                                                     }
                                                 }
+                                                else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2)
+                                                {
+                                                    Ai_BoardArray[Move[2]][Move[3]].SpecialMove = 3;
+                                                    MoveList.Add(Move);
+                                                }
                                             }
                                             if (x - 1 >= 0)
                                             {
@@ -1108,6 +1141,11 @@ namespace Test1
                                                     {
                                                         MoveList.Add(Move);
                                                     }
+                                                }
+                                                else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2)
+                                                {
+                                                    Ai_BoardArray[Move[2]][Move[3]].SpecialMove = 3;
+                                                    MoveList.Add(Move);
                                                 }
                                             }
 
@@ -1209,7 +1247,6 @@ namespace Test1
                                     }
                                     break;
                                 }
-
                             case "Bishop":
                                 {
                                     for (int i = 1; i < 8; i++)
