@@ -59,10 +59,12 @@ namespace Test1
 
         }
 
-        //events for game over
+        //game over and stalemate events
         //special moves
+        //promotions
         //settings and buttons
         //highlight ai move?
+        //force ai to move forward/avoid repeating move
 
         
 
@@ -927,7 +929,7 @@ namespace Test1
                             Ai_BoardArray[Move[0]][Move[1]].SpecialMove = 0;
 
                     }
-                    //check if pawn and if spacial move
+                    
                     SChesspiece bkup = new SChesspiece();
                     bkup = Ai_BoardArray[Move[2]][Move[3]];
                     SChesspiece bkup1 = new SChesspiece();
@@ -1696,6 +1698,15 @@ namespace Test1
             for( int i = 0;i<MoveList.Count;i++)
             {
                 Move = MoveList[i];
+                if (Ai_BoardArray[Move[0]][Move[1]].PieceType == "Pawn")
+                {
+                    if (Math.Abs(Move[1] - Move[3]) == 2)
+                        Ai_BoardArray[Move[0]][Move[1]].SpecialMove = 2;
+                    else
+                        Ai_BoardArray[Move[0]][Move[1]].SpecialMove = 0;
+
+                }
+
                 SChesspiece bkup = new SChesspiece();
                 bkup = Ai_BoardArray[Move[2]][Move[3]];
                 SChesspiece bkup1 = new SChesspiece();

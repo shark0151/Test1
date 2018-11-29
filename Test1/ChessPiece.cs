@@ -739,7 +739,7 @@ namespace Test1
                 if (BoardArray[stx][sty].PieceType == "Pawn" && BoardArray[endx][endy].SpecialMove == 3)
                 {
                     ChessPiece Piece = BoardArray[stx][sty];
-                    BoardArray[endx][endy] = Piece; //also resets SpecialMove to 0
+                    BoardArray[endx][endy] = Piece; //also resets SpecialMove to 0. Find if it would be necessary to reset if move is not taken.
                     BoardArray[stx][sty] = new ChessPiece();
                     BoardArray[endx][sty] = new ChessPiece();
                 }
