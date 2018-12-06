@@ -3,7 +3,7 @@
   <Identity Name="a84c6718-5eaa-40b9-99ad-b7b3733397be" Publisher="CN=Vlad" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="a84c6718-5eaa-40b9-99ad-b7b3733397be" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>Test1</DisplayName>
+    <DisplayName>UWP Chess</DisplayName>
     <PublisherDisplayName>Vlad</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Test1.App">
-      <uap:VisualElements DisplayName="Chess" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Test1" BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="Chess" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Chess Game" BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
