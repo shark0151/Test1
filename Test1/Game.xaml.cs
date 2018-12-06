@@ -56,6 +56,7 @@ namespace Test1
         {
 
             Ai_Enabled = (bool)e.Parameter;
+            checkBox.IsChecked = (bool)e.Parameter;
 
         }
 
@@ -78,6 +79,7 @@ namespace Test1
 
             void InitTable()
             {
+                
                 Chessboard.Children.Add(PiecesGrid);
                 for (int i = 0; i < 8; i++)
                 {
@@ -159,6 +161,14 @@ namespace Test1
                 }
             }
         }
+        private void checkBox_Checked(object sender, RoutedEventArgs e)
+        {
+            Ai_Enabled = true;
+        }
+        private void checkBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Ai_Enabled = false;
+        }
 
         private static List<List<SChesspiece>> virtual_MovePiece(List<List<SChesspiece>> virtual_BoardArrayx, List<int> Moveit)
         {
@@ -192,6 +202,31 @@ namespace Test1
                     virtual_BoardArrayx[astx][asty] = new SChesspiece();
                     virtual_BoardArrayx[aendx][asty] = new SChesspiece();
                 }
+                if (virtual_BoardArrayx[astx][asty].PieceType == "King" && virtual_BoardArrayx[aendx][aendy].SpecialMove == 5)
+                {
+                    SChesspiece Piece = new SChesspiece();
+                    if (virtual_BoardArrayx[aendx][aendy].PieceType == "Rook" && aendx + 4 ==stx)
+                    {
+                        Piece = virtual_BoardArrayx[aendx][aendy]; //rook
+                        virtual_BoardArrayx[aendx + 3][aendy] = Piece;//rook moves here
+                        virtual_BoardArrayx[aendx][aendy] = new SChesspiece();
+                        Piece = virtual_BoardArrayx[astx][asty]; //king
+                        virtual_BoardArrayx[aendx+2][aendy] = Piece; //king moves here
+                        virtual_BoardArrayx[astx][asty] = new SChesspiece();
+                    }
+                    if (virtual_BoardArrayx[aendx][aendy].PieceType == "Rook" && aendx - 3 == stx)
+                    {
+                        Piece = virtual_BoardArrayx[aendx][aendy]; //rook
+                        virtual_BoardArrayx[aendx-2][aendy] = Piece;//rook moves here
+                        virtual_BoardArrayx[aendx][aendy] = new SChesspiece();
+                        Piece = virtual_BoardArrayx[astx][asty]; //king
+                        virtual_BoardArrayx[aendx - 1][aendy] = Piece; //king moves here
+                        virtual_BoardArrayx[astx][asty] = new SChesspiece();
+                    }
+                    
+
+
+                }
                 else
                 {
                     SChesspiece Piece = virtual_BoardArrayx[astx][asty];
@@ -224,7 +259,6 @@ namespace Test1
             
         }
 
-
         public static async Task Minmaxroot(string Play_as, int depth)
         {
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, () =>
@@ -247,8 +281,6 @@ namespace Test1
                 }
 
                 
-
-
                 List<int> Move = new List<int> { 0, 0, 0, 0 };
                 List<List<int>> MoveList = new List<List<int>>();
                 int maxvalue = -999;
@@ -313,7 +345,7 @@ namespace Test1
                                                         }
 
                                                     }
-                                                    else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2 )
+                                                    else if (Ai_BoardArray[Move[2]][y].HasPiece == true && Ai_BoardArray[Move[2]][y].SpecialMove == 2)
                                                     {
                                                         Ai_BoardArray[Move[2]][Move[3]].SpecialMove = 3;
                                                         MoveList.Add(Move);
@@ -379,7 +411,6 @@ namespace Test1
                                         }
                                         break;
                                     }
-
                                 case "Knight":
                                     {
                                         if (x - 1 >= 0 & y - 2 >= 0)
@@ -808,6 +839,15 @@ namespace Test1
                                                 MoveList.Add(Move);
 
                                             }
+                                            if (x + 3 < 8)
+                                            {
+                                                Move = new List<int> { x, y, x + 3, y };
+                                                if (!Ai_BoardArray[Move[2]-1][Move[3]].HasPiece && Ai_BoardArray[x][y].SpecialMove == 4 && Ai_BoardArray[Move[2]][Move[3]].SpecialMove == 5)
+                                                {
+                                                    MoveList.Add(Move);
+                                                    
+                                                }
+                                            }
                                         }
                                         if (x - 1 >= 0)
                                         {
@@ -820,6 +860,15 @@ namespace Test1
                                             {
                                                 MoveList.Add(Move);
 
+                                            }
+                                            if (x - 4 >= 0)
+                                            {
+                                                Move = new List<int> { x, y, x - 4, y };
+                                                if (!Ai_BoardArray[Move[2]+2][Move[3]].HasPiece && !Ai_BoardArray[Move[2]+1][Move[3]].HasPiece && Ai_BoardArray[x][y].SpecialMove == 4 && Ai_BoardArray[Move[2]][Move[3]].SpecialMove == 5)
+                                                {
+                                                    MoveList.Add(Move);
+                                                    
+                                                }
                                             }
 
                                         }
@@ -910,7 +959,6 @@ namespace Test1
                                         }
                                         break;
                                     }
-
                             }
 
                         }
@@ -920,6 +968,10 @@ namespace Test1
                 for (int i = 0; i < MoveList.Count; i++)
                 {
                     Move = MoveList[i];
+                    SChesspiece bkup = new SChesspiece();
+                    bkup = Ai_BoardArray[Move[2]][Move[3]];
+                    SChesspiece bkup1 = new SChesspiece();
+                    bkup1 = Ai_BoardArray[Move[0]][Move[1]];
 
                     if (Ai_BoardArray[Move[0]][Move[1]].PieceType == "Pawn")
                     {
@@ -929,11 +981,14 @@ namespace Test1
                             Ai_BoardArray[Move[0]][Move[1]].SpecialMove = 0;
 
                     }
-                    
-                    SChesspiece bkup = new SChesspiece();
-                    bkup = Ai_BoardArray[Move[2]][Move[3]];
-                    SChesspiece bkup1 = new SChesspiece();
-                    bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+                    if (Ai_BoardArray[Move[0]][Move[1]].PieceType == "Rook")
+                    {
+                        Ai_BoardArray[Move[0]][Move[1]].SpecialMove = 0;
+                    }
+                    if (Ai_BoardArray[Move[0]][Move[1]].PieceType == "King")
+                    {
+                        Ai_BoardArray[Move[0]][Move[1]].SpecialMove = 0;
+                    }
 
                     var value = Minmax(virtual_MovePiece(Ai_BoardArray, MoveList[i]), enemy, depth - 1, 999, -999);
                     undo(Ai_BoardArray, bkup, bkup1, Move);
@@ -951,7 +1006,6 @@ namespace Test1
             });
         }
 
-        
         private static int Minmax(List<List<SChesspiece>> Ai_BoardArray, string Play_as, int depth,int Score_W,int Score_B)
         {
             
@@ -1156,7 +1210,6 @@ namespace Test1
                                     }
                                     break;
                                 }
-
                             case "Knight":
                                 {
                                     if (x - 1 >= 0 & y - 2 >= 0)
@@ -1575,7 +1628,7 @@ namespace Test1
                                 {//up/down
                                     if (x + 1 < 8)
                                     {
-                                        Move = new List<int> { x, y, x + 1, y};
+                                        Move = new List<int> { x, y, x + 1, y };
                                         if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                         {
                                             MoveList.Add(Move);
@@ -1584,6 +1637,15 @@ namespace Test1
                                         {
                                             MoveList.Add(Move);
 
+                                        }
+                                        if (x + 3 < 8)
+                                        {
+                                            Move = new List<int> { x, y, x + 3, y };
+                                            if (!Ai_BoardArray[Move[2] - 1][Move[3]].HasPiece && Ai_BoardArray[x][y].SpecialMove == 4 && Ai_BoardArray[Move[2]][Move[3]].SpecialMove == 5)
+                                            {
+                                                MoveList.Add(Move);
+
+                                            }
                                         }
                                     }
                                     if (x - 1 >= 0)
@@ -1598,11 +1660,20 @@ namespace Test1
                                             MoveList.Add(Move);
 
                                         }
+                                        if (x - 4 >= 0)
+                                        {
+                                            Move = new List<int> { x, y, x - 4, y };
+                                            if (!Ai_BoardArray[Move[2] + 2][Move[3]].HasPiece && !Ai_BoardArray[Move[2] + 1][Move[3]].HasPiece && Ai_BoardArray[x][y].SpecialMove == 4 && Ai_BoardArray[Move[2]][Move[3]].SpecialMove == 5)
+                                            {
+                                                MoveList.Add(Move);
+
+                                            }
+                                        }
 
                                     }
                                     if (y + 1 < 8)
                                     {
-                                        Move = new List<int> { x, y, x, y + 1};
+                                        Move = new List<int> { x, y, x, y + 1 };
                                         if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                         {
                                             MoveList.Add(Move);
@@ -1673,7 +1744,7 @@ namespace Test1
                                     }
                                     if (x + 1 < 8 & y - 1 >= 0)
                                     {
-                                        Move = new List<int> { x, y, x + 1, y - 1};
+                                        Move = new List<int> { x, y, x + 1, y - 1 };
                                         if (!Ai_BoardArray[Move[2]][Move[3]].HasPiece)
                                         {
                                             MoveList.Add(Move);
@@ -1687,7 +1758,6 @@ namespace Test1
                                     }
                                     break;
                                 }
-                                
                         }
 
 
@@ -1698,6 +1768,11 @@ namespace Test1
             for( int i = 0;i<MoveList.Count;i++)
             {
                 Move = MoveList[i];
+                SChesspiece bkup = new SChesspiece();
+                bkup = Ai_BoardArray[Move[2]][Move[3]];
+                SChesspiece bkup1 = new SChesspiece();
+                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+
                 if (Ai_BoardArray[Move[0]][Move[1]].PieceType == "Pawn")
                 {
                     if (Math.Abs(Move[1] - Move[3]) == 2)
@@ -1706,11 +1781,14 @@ namespace Test1
                         Ai_BoardArray[Move[0]][Move[1]].SpecialMove = 0;
 
                 }
-
-                SChesspiece bkup = new SChesspiece();
-                bkup = Ai_BoardArray[Move[2]][Move[3]];
-                SChesspiece bkup1 = new SChesspiece();
-                bkup1 = Ai_BoardArray[Move[0]][Move[1]];
+                if (Ai_BoardArray[Move[0]][Move[1]].PieceType == "Rook")
+                {
+                    Ai_BoardArray[Move[0]][Move[1]].SpecialMove = 0;
+                }
+                if (Ai_BoardArray[Move[0]][Move[1]].PieceType == "King")
+                {
+                    Ai_BoardArray[Move[0]][Move[1]].SpecialMove = 0;
+                }
 
                 var value = Minmax(virtual_MovePiece(Ai_BoardArray, MoveList[i]), enemy, depth - 1, Score_W, Score_B);
                 undo(Ai_BoardArray, bkup, bkup1, Move);

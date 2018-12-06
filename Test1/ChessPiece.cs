@@ -743,6 +743,31 @@ namespace Test1
                     BoardArray[stx][sty] = new ChessPiece();
                     BoardArray[endx][sty] = new ChessPiece();
                 }
+                if (BoardArray[stx][sty].PieceType == "King" && BoardArray[endx][endy].SpecialMove == 6)
+                {
+                    ChessPiece Piece = new ChessPiece();
+                    if (BoardArray[endx + 1][endy].PieceType == "Rook")
+                    {
+                        Piece = BoardArray[endx + 1][endy];
+                        BoardArray[endx - 1][endy] = Piece;
+                        BoardArray[endx + 1][endy] = new ChessPiece();
+                        Piece = BoardArray[stx][sty];
+                        BoardArray[endx][endy] = Piece;
+                        BoardArray[stx][sty] = new ChessPiece();
+                    }
+                    if (BoardArray[endx - 2][endy].PieceType == "Rook")
+                    {
+                        Piece = BoardArray[endx - 2][endy];
+                        BoardArray[endx + 1][endy] = Piece;
+                        BoardArray[endx - 2][endy] = new ChessPiece();
+                        Piece = BoardArray[stx][sty];
+                        BoardArray[endx][endy] = Piece;
+                        BoardArray[stx][sty] = new ChessPiece();
+                    }
+                     //also resets SpecialMove to 0. Find if it would be necessary to reset if move is not taken.
+                    
+                    
+                }
                 else
                 {
                     ChessPiece Piece = BoardArray[stx][sty];
@@ -1180,6 +1205,12 @@ namespace Test1
                                     if (!BoardArray[posx + 1][posy].HasPiece)
                                     {
                                         BoardArray[posx + 1][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        if (posx + 3 < 8)
+                                            if (!BoardArray[posx + 2][posy].HasPiece && SpecialMove == 4 && BoardArray[posx + 3][posy].SpecialMove == 5)
+                                            {
+                                                BoardArray[posx + 2][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                                BoardArray[posx + 2][posy].SpecialMove = 6;
+                                            }
                                     }
                                     else if (BoardArray[posx + 1][posy].TeamColour == enemy)
                                     {
@@ -1192,6 +1223,12 @@ namespace Test1
                                     if (!BoardArray[posx - 1][posy].HasPiece)
                                     {
                                         BoardArray[posx - 1][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        if (posx - 4 >= 0)
+                                            if (!BoardArray[posx - 2][posy].HasPiece && !BoardArray[posx - 3][posy].HasPiece && SpecialMove == 4 && BoardArray[posx - 4][posy].SpecialMove == 5)
+                                            {
+                                                BoardArray[posx - 2][posy].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                                BoardArray[posx - 2][posy].SpecialMove = 6;
+                                            }
                                     }
                                     else if (BoardArray[posx - 1][posy].TeamColour == enemy)
                                     {
@@ -1205,6 +1242,7 @@ namespace Test1
                                     if (!BoardArray[posx][posy + 1].HasPiece)
                                     {
                                         BoardArray[posx][posy + 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        
                                     }
                                     else if (BoardArray[posx][posy + 1].TeamColour == enemy)
                                     {
@@ -1218,6 +1256,7 @@ namespace Test1
                                     if (!BoardArray[posx][posy - 1].HasPiece)
                                     {
                                         BoardArray[posx][posy - 1].EnablePlayer(Turn, Enemy: enemy, showmove: true);
+                                        
                                     }
                                     else if (BoardArray[posx][posy - 1].TeamColour == enemy)
                                     {
@@ -1311,6 +1350,14 @@ namespace Test1
                         BoardArray[stx][sty].SpecialMove = 0;
 
                 }
+                if (BoardArray[stx][sty].PieceType == "Rook")
+                {
+                    BoardArray[stx][sty].SpecialMove = 0;
+                }
+                if (BoardArray[stx][sty].PieceType == "King")
+                {
+                    BoardArray[stx][sty].SpecialMove = 0;
+                }
                 MovePiece();
                 if (Turn == "White") { Turn = "Black"; } else { Turn = "White"; }
                 
@@ -1327,6 +1374,16 @@ namespace Test1
                     endy = BMove[3];
 
                     if (BoardArray[endx][sty].PieceType == "Pawn" && BoardArray[endx][sty].TeamColour == "White") { BoardArray[endx][endy].SpecialMove = 3; }
+                    if (BoardArray[stx][sty].PieceType == "King")
+                    {
+                        BoardArray[stx][sty].SpecialMove = 0;
+                        if (Math.Abs(stx - endx) == 4)
+                        { endx = endx + 2; }
+                        else
+                        { endx = endx - 1; }
+                        BoardArray[endx][endy].SpecialMove = 6;
+                    }
+
                     MovePiece();
                     if (Turn == "White") { Turn = "Black"; } else { Turn = "White"; }
                     await RefreshTable();
